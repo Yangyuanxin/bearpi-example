@@ -52,6 +52,10 @@
 - 11.LCD_ST7789_Chinese_Display
 
   基于小熊派中文字库显示案例
+  
+- 12.BearPi_Menu_Event(待完成)
+
+  基于小熊派菜单事件框架应用
 
 #### 参与贡献
 
