@@ -3,9 +3,7 @@
 #### 介绍
 用于存放小熊派相关实验例程，包括之前已经发表在微信公众号上的文章。
 
-详细Demo文章讲解可扫码关注以下微信公众号：嵌入式云IOT技术圈
-
-![image-20200923103225475](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200923103225475.png)
+详细Demo文章讲解可关注微信公众号：嵌入式云IOT技术圈
 
 #### 使用说明
 
@@ -53,9 +51,23 @@
 
   基于小熊派中文字库显示案例
   
-- 12.BearPi_Menu_Event(待完成)
+- 12.BearPi_Menu_Event(进度80%)
 
   基于小熊派菜单事件框架应用
+
+  (1)UI界面
+
+  主页面、测试页面、版本查看页面、上传页面(未实现)、菜单列表(未实现)
+
+  (2)按键交互
+
+  2个按键4种状态(左键短按、左键长按、右键短按、右键长按)(已实现)
+
+  (3)检测逻辑
+
+  实现烟感检测，大于600pm报警闪烁，小于600ppm && 检测时间>=10s，安全闪烁(已实现)
+
+
 
 #### 参与贡献
 
@@ -63,13 +75,3 @@
 2.  新建 Feat_xxx 分支
 3.  提交代码
 4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)

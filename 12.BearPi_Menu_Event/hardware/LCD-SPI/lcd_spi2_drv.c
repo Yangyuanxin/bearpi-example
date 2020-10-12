@@ -1006,7 +1006,6 @@ void LCD_ShowChinese48x48(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 	uint16_t TypefaceNum;//一个字符所占字节大小
 	uint16_t x0=x;
 	TypefaceNum=(sizey/8+((sizey%8)?1:0))*sizey;
-	printf("48*48 TypefaceNum:%d\n",TypefaceNum);
 	HZnum=sizeof(tfont48)/sizeof(typFNT_GB48);	//统计汉字数目
 	for(k=0;k<HZnum;k++) 
 	{
@@ -1067,7 +1066,6 @@ void LCD_ShowChinese64x64(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 	uint16_t x0=x;
 	TypefaceNum=(sizey/8+((sizey%8)?1:0))*sizey;
 	HZnum=sizeof(tfont64)/sizeof(typFNT_GB64);	//统计汉字数目
-	printf("64*64 TypefaceNum:%d\n",TypefaceNum);
 	for(k=0;k<HZnum;k++) 
 	{
 		if ((tfont64[k].Index[0]==*(s))&&(tfont64[k].Index[1]==*(s+1)))

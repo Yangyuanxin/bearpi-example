@@ -35,6 +35,7 @@ extern "C" {
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <string.h>
 #include <assert.h>
 #include "rtc.h"
 #include "key.h"
@@ -44,6 +45,12 @@ extern "C" {
 
 #include "menu.h"
 #include "menu_ui.h"
+
+#include "logic.h"
+#include "test_ui.h"
+#include "main_ui.h"
+#include "sleep_ui.h"
+#include "version_info_ui.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -71,12 +78,14 @@ void Error_Handler(void);
 /* Private defines -----------------------------------------------------------*/
 #define LED_Pin GPIO_PIN_13
 #define LED_GPIO_Port GPIOC
+#define MQ2_Sensor_Pin GPIO_PIN_2
+#define MQ2_Sensor_GPIO_Port GPIOC
+#define SF1_LED_Pin GPIO_PIN_0
+#define SF1_LED_GPIO_Port GPIOA
 #define KEY1_Pin GPIO_PIN_2
 #define KEY1_GPIO_Port GPIOB
 #define LCD_PWR_Pin GPIO_PIN_15
 #define LCD_PWR_GPIO_Port GPIOB
-#define LCD_WR_RS_Pin GPIO_PIN_6
-#define LCD_WR_RS_GPIO_Port GPIOC
 #define LCD_RST_Pin GPIO_PIN_7
 #define LCD_RST_GPIO_Port GPIOC
 #define KEY2_Pin GPIO_PIN_3
