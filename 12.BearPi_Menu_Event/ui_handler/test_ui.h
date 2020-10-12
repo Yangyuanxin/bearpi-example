@@ -39,6 +39,8 @@ void display_detect(uint8_t enable);
 void display_safety(uint8_t enable);
 /*ÏÔÊ¾Î£ÏÕ1Òş²Ø0*/
 void display_danger(uint8_t enable);
+//Ë¢ĞÂ¶¯»­
+void icon_reflash(uint8_t status);
 
 #endif //__TEST_UI_H
 

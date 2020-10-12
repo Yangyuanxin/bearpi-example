@@ -5,6 +5,11 @@
 
 Detect_Logic detect_logic ;
 
+//动画图标
+#define AMI_X										115
+#define AMI_Y										60
+#define ITEM_AMI_FONT_WIDTH  		32
+
 //基准
 #define ITEM_BASE_X		 		 			73
 #define ITEM_BASE_Y		 		 			92
@@ -38,6 +43,34 @@ Item Test_Item[] =
     {ITEM_SAFE_X, ITEM_SAFE_Y, ITEM_SAFE_FONT, GREEN, BLACK, ITEM_SAFE_FONT_WIDTH, 1},									//2
     {ITEM_DANGER_X, ITEM_DANGER_Y, ITEM_DANGER_FONT, RED, BLACK, ITEM_DANGER_FONT_WIDTH, 1},						//3
 };
+
+
+//刷新动画
+void icon_reflash(uint8_t status)
+{
+	switch(status)
+	{
+		case 0:
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "/", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
+			break ;
+		case 1:
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
+			break ;
+		case 2:
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "\\", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
+			break ;
+		case 3:
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
+			break ;
+		case 4:
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "/", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
+			LCD_ShowCharStr(AMI_X, AMI_Y, 100, "\\", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
+			break ;
+		default:
+			break ;
+	}
+}
 
 /*显示基准1隐藏0*/
 void display_base(uint8_t enable)
@@ -180,6 +213,9 @@ void test_page_process(uint8_t Event_Code)
 			Display_Process_Bar(0,0);
 			display_smoke_value(0,BLACK,0);
 			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+			detect_logic.Count_Base = 0 ;
+			/*显示基准*/
+			display_base(1);
 			break ;
 		/*直接跳转到安全*/
 		case LEFT_LONG:
@@ -193,6 +229,7 @@ void test_page_process(uint8_t Event_Code)
 			display_smoke_value(0,BLACK,0);
 			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 			display_safety(1);
+			icon_reflash(4);
 			break ;
 		/*退出*/
 		case RIGHT:
@@ -203,6 +240,7 @@ void test_page_process(uint8_t Event_Code)
 			detect_logic.Test_Process = 0 ;
 			detect_logic.Start_Detect = 0 ;
 			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+			icon_reflash(4);
 			LCD_DisplayOff();
 			Display_Process_Bar(0,0);
 			display_smoke_value(0,BLACK,0);
