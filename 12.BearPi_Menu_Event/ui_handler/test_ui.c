@@ -1,9 +1,21 @@
 #include "test_ui.h"
 
 #define SMOKE_X 66
-#define SMOKE_Y 90
+#define SMOKE_Y 140
 
 Detect_Logic detect_logic ;
+
+//基准
+#define ITEM_BASE_X		 		 			73
+#define ITEM_BASE_Y		 		 			92
+#define ITEM_BASE_FONT		 			"基准"
+#define ITEM_BASE_FONT_WIDTH  	48
+
+//检测中
+#define ITEM_DETECT_X		 		 			73
+#define ITEM_DETECT_Y		 		 			92
+#define ITEM_DETECT_FONT		 			"检测"
+#define ITEM_DETECT_FONT_WIDTH  	48
 
 
 //安全
@@ -20,13 +32,44 @@ Detect_Logic detect_logic ;
 
 Item Test_Item[] =
 {
-    /*隐藏*/
-    {ITEM_SAFE_X, ITEM_SAFE_Y, ITEM_SAFE_FONT, BLACK, BLACK, ITEM_SAFE_FONT_WIDTH, 1},		//0
-    {ITEM_DANGER_X, ITEM_DANGER_Y, ITEM_DANGER_FONT, BLACK, BLACK, ITEM_DANGER_FONT_WIDTH, 1},								//1
     /*显示*/
-    {ITEM_SAFE_X, ITEM_SAFE_Y, ITEM_SAFE_FONT, GREEN, BLACK, ITEM_SAFE_FONT_WIDTH, 1},		//2
-    {ITEM_DANGER_X, ITEM_DANGER_Y, ITEM_DANGER_FONT, RED, BLACK, ITEM_DANGER_FONT_WIDTH, 1},								//3
+		{ITEM_BASE_X, ITEM_BASE_Y, ITEM_BASE_FONT, GREEN, BLACK, ITEM_BASE_FONT_WIDTH, 1},								  //0
+		{ITEM_DETECT_X, ITEM_DETECT_Y, ITEM_DETECT_FONT, GREEN, BLACK, ITEM_DETECT_FONT_WIDTH, 1},					//1
+    {ITEM_SAFE_X, ITEM_SAFE_Y, ITEM_SAFE_FONT, GREEN, BLACK, ITEM_SAFE_FONT_WIDTH, 1},									//2
+    {ITEM_DANGER_X, ITEM_DANGER_Y, ITEM_DANGER_FONT, RED, BLACK, ITEM_DANGER_FONT_WIDTH, 1},						//3
 };
+
+/*显示基准1隐藏0*/
+void display_base(uint8_t enable)
+{
+	if(enable == 1)
+    {
+		LCD_ShowChinese(Test_Item[0].x, Test_Item[0].y,
+						Test_Item[0].Str, Test_Item[0].front_color,
+						Test_Item[0].back_color, Test_Item[0].font_num, Test_Item[0].mode);
+    }
+    else if(enable == 0)
+    {
+        /*隐藏*/
+        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    }
+}
+
+/*显示检测1隐藏0*/
+void display_detect(uint8_t enable)
+{
+	if(enable == 1)
+    {
+		LCD_ShowChinese(Test_Item[1].x, Test_Item[1].y,
+						Test_Item[1].Str, Test_Item[1].front_color,
+						Test_Item[1].back_color, Test_Item[1].font_num, Test_Item[1].mode);
+    }
+    else if(enable == 0)
+    {
+        /*隐藏*/
+        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    }
+}
 
 /*显示安全1隐藏0*/
 void display_safety(uint8_t enable)
@@ -112,7 +155,11 @@ void test_page_init(void)
 	Flow_Cursor.flow_cursor = TEST_PAGE ;
 	detect_logic.Test_Process = 0 ;
 	detect_logic.Start_Detect = 1 ;
-	detect_logic.is_Danger	= 0 ;
+	/*检测状态设置为基准*/
+	detect_logic.Detect_Step = BASE_LINE ;
+	detect_logic.Count_Base = 0 ;
+	/*显示基准*/
+	display_base(1);
 	display_smoke_value(0,GREEN,1);
 	LCD_ShowChinese(40, 208,(uint8_t *)"按右键退出",GREEN, BLACK, 32,1);
 }
@@ -122,26 +169,40 @@ void test_page_process(uint8_t Event_Code)
 {
 	switch(Event_Code)
 	{
+		/*重新开始测试*/
+		case LEFT:
+			detect_logic.Detect_Step = BASE_LINE ;
+			mq2_sensor_interface.led_control(&mq2_sensor_interface,0);
+			mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
+			detect_logic.Count_Alarm = 0 ;
+			detect_logic.Test_Process = 0 ;
+			detect_logic.Start_Detect = 1 ;
+			Display_Process_Bar(0,0);
+			display_smoke_value(0,BLACK,0);
+			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+			break ;
 		/*直接跳转到安全*/
 		case LEFT_LONG:
+			detect_logic.Detect_Step = DETECT_SAFETY ;
 			mq2_sensor_interface.led_control(&mq2_sensor_interface,0);
-			detect_logic.is_Danger = 2 ;
+			mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
 			detect_logic.Count_Alarm = 0 ;
 			detect_logic.Test_Process = 0 ;
 			detect_logic.Start_Detect = 0 ;
 			Display_Process_Bar(0,0);
 			display_smoke_value(0,BLACK,0);
-			display_safety(0);
-			display_danger(0);
+			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 			display_safety(1);
 			break ;
 		/*退出*/
 		case RIGHT:
+			detect_logic.Detect_Step = NULL_STATUS ;
 			mq2_sensor_interface.led_control(&mq2_sensor_interface,0);
-			detect_logic.is_Danger = 0 ;
+			mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
 			detect_logic.Count_Alarm = 0 ;
 			detect_logic.Test_Process = 0 ;
 			detect_logic.Start_Detect = 0 ;
+			LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 			LCD_DisplayOff();
 			Display_Process_Bar(0,0);
 			display_smoke_value(0,BLACK,0);

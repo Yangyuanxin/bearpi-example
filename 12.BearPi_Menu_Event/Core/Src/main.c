@@ -94,67 +94,85 @@ void Test_CallBack(void)
     static uint8_t Refresh_flag = 0 ;
     static uint8_t Count_Refresh = 0;
     int smoke_value = 0 ;
-    Count_Refresh++ ;
-
     if(Flow_Cursor.flow_cursor == TEST_PAGE && detect_logic.Start_Detect == 1)
     {
-        ++detect_logic.Test_Process ;
+				switch(detect_logic.Detect_Step)
+				{
+					case BASE_LINE:
+						
+						smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+						printf("»ù×¼:%d\n",smoke_value);
+						if(smoke_value < ALARM_THRESHOLD / 2)
+							++detect_logic.Count_Base ;
+						if(detect_logic.Count_Base > 5)
+						{
+							/*Òþ²Ø»ù×¼*/
+							display_base(0);
+							/*ÏÔÊ¾¼ì²â*/
+							display_detect(1);
+							detect_logic.Detect_Step = DETECTING ;
+							break ;
+						}
+						break ;
+					case DETECTING:
+						++detect_logic.Test_Process ;
+					  /*²âÊÔ°²È«*/
+						if(detect_logic.Test_Process == 100 && mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
+						{
+								detect_logic.Detect_Step = DETECT_SAFETY ;
+								Display_Process_Bar(0, 0);
+								display_smoke_value(smoke_value, BLACK, 0);
+								/*Òþ²Ø¼ì²â*/
+								display_detect(0);
+								/*ÏÔÊ¾°²È«*/
+								display_safety(1);
+								break ;
+						}
+						else
+						{
+								smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+								printf("¼ì²â:%d\n",smoke_value);
+								if(mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
+										display_smoke_value(smoke_value, GREEN, 1);
+								else
+								{
+										display_smoke_value(smoke_value, RED, 1);
+										detect_logic.Count_Alarm++ ;
+										if(detect_logic.Count_Alarm > 20)
+										{
+												detect_logic.Detect_Step = DETECT_DANGER ;
+												detect_logic.Count_Alarm = 0 ;
+												display_smoke_value(smoke_value, BLACK, 0);
+												Display_Process_Bar(0, 0);
+												/*Òþ²Ø¼ì²â*/
+												display_detect(0);
+												/*ÏÔÊ¾Î£ÏÕ*/
+												display_danger(1);
+												break ;
+										}
+								}
 
-        /*²âÊÔ°²È«*/
-        if(detect_logic.Test_Process == 100 && mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
-        {
-            detect_logic.is_Danger = 2 ;
-            detect_logic.Start_Detect = 0 ;
-            Display_Process_Bar(0, 0);
-            display_smoke_value(smoke_value, BLACK, 0);
-            /*ÏÔÊ¾°²È«*/
-            display_safety(1);
-        }
-        else
-        {
-            smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-
-            if(mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
-                display_smoke_value(smoke_value, GREEN, 1);
-            else
-            {
-                display_smoke_value(smoke_value, RED, 1);
-                detect_logic.Count_Alarm++ ;
-
-                if(detect_logic.Count_Alarm > 20)
-                {
-                    detect_logic.is_Danger = 1 ;
-                    detect_logic.Count_Alarm = 0 ;
-                    detect_logic.Start_Detect = 0 ;
-                    Display_Process_Bar(0, 0);
-                    /*ÏÔÊ¾Î£ÏÕ*/
-                    display_danger(1);
-                }
-            }
-
-            Display_Process_Bar(detect_logic.Test_Process, 1);
-        }
-    }
-
-    if(Count_Refresh == 3)
-    {
-        Count_Refresh = 0 ;
-
-        /*Î£ÏÕÉÁË¸*/
-        if(detect_logic.is_Danger == 1)
-        {
-            Refresh_flag = !Refresh_flag ;
-            display_danger(Refresh_flag);
-            mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
-        }
-
-        /*°²È«ÉÁË¸*/
-        if(detect_logic.is_Danger == 2)
-        {
-            Refresh_flag = !Refresh_flag ;
-            display_safety(Refresh_flag);
-            mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
-        }
+								Display_Process_Bar(detect_logic.Test_Process, 1);
+						}
+						break ;
+					case DETECT_SAFETY:
+						detect_logic.Start_Detect = 0 ;
+						break ;
+					case DETECT_DANGER:
+						Count_Refresh++ ;
+						if(Count_Refresh >= 3)
+						{
+								Count_Refresh = 0 ;
+								/*Î£ÏÕÉÁË¸*/
+								Refresh_flag = !Refresh_flag ;
+								display_danger(Refresh_flag);
+								mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
+								mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_flag);
+						}
+						break ;
+					default:
+						break ;
+				}
     }
 }
 /* USER CODE END 0 */

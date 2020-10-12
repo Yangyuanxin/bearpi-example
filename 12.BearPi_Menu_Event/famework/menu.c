@@ -1,6 +1,5 @@
 #include "menu.h"
 
-
 /*菜单操作表定义*/
 static OP_MENU_PAGE g_opStruct[] = 
 {
