@@ -1,11 +1,46 @@
 #include "key.h"
+#include "bear.h"
+
+
+void PowerOn(void)
+{
+    static uint32_t power_press_count = 0;
+    HAL_Delay(500);
+    while(1)
+    {
+        if(HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == 0)
+        {
+            power_press_count ++;
+						
+            if(power_press_count >= 100)
+            {
+								LCD_Init();
+								LCD_Show_Image(0,0,240,240,gImage_LOGO);
+								//开指示灯
+								HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_SET);
+                while(HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == 0)
+                {
+                    HAL_Delay(10);
+                }
+                break;
+            }
+        }
+        else
+        {
+            power_press_count = 0;
+        }
+
+        HAL_Delay(10);
+    }
+}
 
 
 void GetKey(__IO uint8_t *pKeyValue)
 {
-	Key_F1(pKeyValue);
-  Key_F2(pKeyValue);
+    Key_F1(pKeyValue);
+    Key_F2(pKeyValue);
 }
+
 
 void Key_F1(__IO uint8_t *pKeyValue)
 {
@@ -29,8 +64,8 @@ void Key_F1(__IO uint8_t *pKeyValue)
 
             break;
 
-				//计时
-        case 2:     
+        //计时
+        case 2:
             if((key_time < 200) && HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == 0)
                 key_time++;
             else
@@ -80,8 +115,8 @@ void Key_F2(__IO uint8_t *pKeyValue)
 
             break;
 
-				//计时
-        case 2:     
+        //计时
+        case 2:
             if((key_time < 200) && HAL_GPIO_ReadPin(KEY2_GPIO_Port, KEY2_Pin) == 0)
                 key_time++;
             else

@@ -26,6 +26,8 @@ extern Detect_Logic detect_logic ;
 void test_page_init(void);
 /*测试页面事件处理*/
 void test_page_process(uint8_t Event_Code);
+/*显示1隐藏0进度条框*/
+void Display_Process_Bar_Frame(int enable);
 /*显示1隐藏0进度条*/
 void Display_Process_Bar(int Process, int enable);
 /*显示烟感值*/

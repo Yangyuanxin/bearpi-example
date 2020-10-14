@@ -68,7 +68,6 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     /**SPI2 GPIO Configuration
     PC3     ------> SPI2_MOSI
     PB13     ------> SPI2_SCK
-    PB14     ------> SPI2_MISO
     */
     GPIO_InitStruct.Pin = GPIO_PIN_3;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
@@ -77,7 +76,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* spiHandle)
     GPIO_InitStruct.Alternate = GPIO_AF5_SPI2;
     HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-    GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_14;
+    GPIO_InitStruct.Pin = GPIO_PIN_13;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
@@ -104,11 +103,10 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
     /**SPI2 GPIO Configuration
     PC3     ------> SPI2_MOSI
     PB13     ------> SPI2_SCK
-    PB14     ------> SPI2_MISO
     */
     HAL_GPIO_DeInit(GPIOC, GPIO_PIN_3);
 
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_13|GPIO_PIN_14);
+    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_13);
 
   /* USER CODE BEGIN SPI2_MspDeInit 1 */
 
@@ -126,6 +124,7 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 uint8_t SPI2_WriteByte(uint8_t *TxData, uint16_t size)
 {
     return HAL_SPI_Transmit(&hspi2, TxData, size, 1000);
+	//return HAL_SPI_Transmit_DMA(&hspi2, TxData, size);
 }
 /* USER CODE END 1 */
 

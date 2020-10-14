@@ -120,6 +120,9 @@ void Test_CallBack(void)
 							display_base(0);
 							/*显示检测*/
 							display_detect(1);
+							/*显示进度条框*/
+							Display_Process_Bar_Frame(1);
+							/*切换到检测中*/
 							detect_logic.Detect_Step = DETECTING ;
 							break ;
 						}
@@ -222,6 +225,8 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM16_Init();
   /* USER CODE BEGIN 2 */
+	PowerOn();
+	HAL_Delay(3000);
 	Sensor_Register(&mq2_sensor_interface);
 	printf("led_status:%d\n", mq2_sensor_interface.get_led_status(&mq2_sensor_interface));
 	printf("buzzer_status:%d\n", mq2_sensor_interface.get_buzzer_status(&mq2_sensor_interface));
@@ -234,8 +239,10 @@ int main(void)
 	/*100ms检测一次烟感值*/
 	timer_init(&Test_Timer, Test_CallBack, 100, 100);
 	timer_start(&Test_Timer);
-	LCD_Init();
+	LCD_Clear(BLACK);
 	Menu_Init();
+	//关指示灯
+	HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_RESET);
   /* USER CODE END 2 */
 
   /* Infinite loop */

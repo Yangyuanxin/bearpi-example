@@ -250,7 +250,8 @@ void LCD_Init(void)
 
     /* Frame Rate Control in Normal Mode */
     LCD_Write_Cmd(0xC6);
-    LCD_Write_Data(0x0F);	//60MHZ
+   // LCD_Write_Data(0x0F);	//60MHZ
+		LCD_Write_Data(0x01);		//111MHz 提升屏的刷新速度
 
     /* Power Control 1 */
     LCD_Write_Cmd(0xD0);
