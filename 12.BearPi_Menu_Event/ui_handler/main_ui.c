@@ -85,7 +85,7 @@ void main_page_init(void)
     Flow_Cursor.flow_cursor = MAIN_PAGE ;
     //关LCD显示
     LCD_DisplayOff();
-	LCD_Draw_ColorRect(0,35,239,200,WHITE);
+		LCD_Draw_ColorRect(0,35,239,200,WHITE);
     //显示时钟
     Get_Date_Time();
     sprintf(DateTime_Handler_Info.DisPlay_DateBuf, "%04d-%02d-%02d %02d:%02d:%02d", \
@@ -93,8 +93,6 @@ void main_page_init(void)
             DateTime_Handler_Info.hour, DateTime_Handler_Info.minute, DateTime_Handler_Info.sec
            );
     LCD_ShowCharStr(0, 5, 240, DateTime_Handler_Info.DisPlay_DateBuf, BLACK, WHITE, 24);
-    //LCD_ShowCharStr(0, 15, 240, "......................", BLACK, YELLOW, 24);
-
     //显示左边界符号
     LCD_ShowCharStr(21, 102, 20, "<", BLACK, GREEN, 32);
     //显示主页面菜单项
@@ -102,7 +100,6 @@ void main_page_init(void)
     Select_Main_Menu_Item(main_item);
     //显示右边界符号
     LCD_ShowCharStr(203, 102, 20, ">", BLACK, GREEN, 32);
-    //LCD_ShowCharStr(0, 185, 240, "......................", BLACK, YELLOW, 24);
     //开LCD显示
     LCD_DisplayOn();
 }

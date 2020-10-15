@@ -20,7 +20,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "fatfs.h"
 #include "rtc.h"
+#include "sdmmc.h"
 #include "spi.h"
 #include "tim.h"
 #include "usart.h"
@@ -189,6 +191,51 @@ void Test_CallBack(void)
 				}
     }
 }
+
+
+FATFS fs;	// FatFs文件系统对象
+FIL file;	// 文件对象
+FRESULT f_res;     //文件操作结果
+uint8_t f_GetTotal_Free(uint8_t *drv, uint32_t *total, uint32_t *free)
+{
+    FATFS *fs1;
+    uint8_t res;
+    DWORD fre_clust = 0, fre_sect = 0, tot_sect = 0;
+    f_res = f_mount(fs1, (TCHAR const*)SDPath, 1);
+    res = f_getfree((const TCHAR*)drv, &fre_clust, &fs1);//得到磁盘信息及空闲簇数量
+
+    if(res == 0)
+    {
+        tot_sect = (fs1->n_fatent - 2) * fs1->csize; //得到总扇区数
+        fre_sect = fre_clust * fs1->csize;        //得到空闲扇区数
+        #if _MAX_SS!=512                                  //扇区大小不是512字节,则转换为512字节
+        tot_sect *= fs1->ssize / 512;
+        fre_sect *= fs1->ssize / 512;
+        #endif
+        *total = tot_sect >> 1; //单位为KB
+        *free = fre_sect >> 1; //单位为KB
+    }
+
+    f_res = f_mount(NULL, (TCHAR const*)SDPath, 1);	// 不再使用，取消挂载
+    return res;
+}
+
+void sd_show_picture_bin(TCHAR const* OpenOrCreatTXTFileName)//LCD显示SD中 bin 图片 //通过关闭屏幕背光达到卡点效果
+{
+    UINT br;
+    uint16_t i;
+    uint8_t data[1200]; //存储五行像素点240 的 16进制颜色信息 240*5=1200
+    f_res = f_mount(&fs, (TCHAR const*)SDPath, 1); //挂载时会对SD卡初始化
+    f_res = f_open(&file, OpenOrCreatTXTFileName, FA_READ);
+
+    for(i = 0; i < 96; i++)
+    {
+        f_res = f_read(&file, data, 1200, &br); //x方向240个像素点，每个像素点 2 个
+        SPI2_WriteByte(data, 1200); //显示 5 行像素点
+
+    }
+    f_close(&file);
+}
 /* USER CODE END 0 */
 
 /**
@@ -198,7 +245,8 @@ void Test_CallBack(void)
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	uint32_t Total = 0; //读取SD卡总容量
+    uint32_t Free = 0; //读取SD卡剩余容量
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -224,8 +272,18 @@ int main(void)
   MX_RTC_Init();
   MX_ADC1_Init();
   MX_TIM16_Init();
+  MX_SDMMC1_SD_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 	PowerOn();
+	LCD_Init();
+	printf("***********Test fatfs of SD card**********\r\n");
+  f_GetTotal_Free((uint8_t*)"0:", &Total, &Free); //获取SD卡总容量和剩余容量
+  printf("Total:%dKB=%0.2fGB,free:%dKB=%0.2fGB\r\n", Total, (float)Total / 1024 / 1024, Free, (float)Free / 1024 / 1024);
+	LCD_Clear(BLACK);
+	LCD_DisplayOff();
+	sd_show_picture_bin("Start_Logo.bin");
+	LCD_DisplayOn();
 	HAL_Delay(3000);
 	Sensor_Register(&mq2_sensor_interface);
 	printf("led_status:%d\n", mq2_sensor_interface.get_led_status(&mq2_sensor_interface));
@@ -301,17 +359,18 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_USART1
-                              |RCC_PERIPHCLK_ADC;
+                              |RCC_PERIPHCLK_SDMMC1|RCC_PERIPHCLK_ADC;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
+  PeriphClkInit.Sdmmc1ClockSelection = RCC_SDMMC1CLKSOURCE_PLLSAI1;
   PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_MSI;
   PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
   PeriphClkInit.PLLSAI1.PLLSAI1N = 16;
   PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV7;
   PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
   PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
-  PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_ADC1CLK;
+  PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_48M2CLK|RCC_PLLSAI1_ADC1CLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

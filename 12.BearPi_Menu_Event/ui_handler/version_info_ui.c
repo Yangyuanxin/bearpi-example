@@ -40,9 +40,9 @@ void display_version_info(int enable)
 //版本信息页面初始化
 void Version_Info_Page_Init(void)
 {
-	Flow_Cursor.flow_cursor = VERSION_PAGE ; 
+    Flow_Cursor.flow_cursor = VERSION_PAGE ;
     display_version_info(1);
-	LCD_ShowChinese(20, 208,(uint8_t *)"长按右键退出",GREEN, BLACK, 32,1);
+    LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", GREEN, BLACK, 32, 1);
 }
 
 //版本信息按键操作
@@ -51,15 +51,25 @@ void version_info_page_process(uint8_t KeyValue)
     switch(KeyValue)
     {
         case LEFT:
-			break ;
-        case RIGHT:
-			break ;
-        case RIGHT_LONG:
-			display_version_info(0);
-			LCD_ShowChinese(20, 208,(uint8_t *)"长按右键退出",BLACK, BLACK, 32,1);
-			Flow_Cursor.flow_cursor = MAIN_PAGE ; 
-			main_page_init();
             break ;
+
+        case RIGHT:
+            break ;
+
+        case RIGHT_LONG:
+            display_version_info(0);
+            LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", BLACK, BLACK, 32, 1);
+            Flow_Cursor.flow_cursor = MAIN_PAGE ;
+            //main_page_init();
+						//显示左边界符号
+						LCD_ShowCharStr(21, 102, 20, "<", BLACK, GREEN, 32);
+						//显示主页面菜单项
+						display_main_page(1);
+						Select_Main_Menu_Item(main_item);
+						//显示右边界符号
+						LCD_ShowCharStr(203, 102, 20, ">", BLACK, GREEN, 32);
+            break ;
+
         default:
             break ;
     }

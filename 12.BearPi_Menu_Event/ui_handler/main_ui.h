@@ -11,4 +11,7 @@ void main_page_process(uint8_t Event_Code);
 /*左切换主页面菜单,右进入菜单项*/
 void Select_Main_Menu_Item(uint8_t item);
 
+/*显示主页面*/
+void display_main_page(uint8_t enable);
+
 #endif //__MAIN_UI_H

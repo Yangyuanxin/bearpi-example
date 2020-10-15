@@ -14,8 +14,6 @@ void PowerOn(void)
 						
             if(power_press_count >= 100)
             {
-								LCD_Init();
-								LCD_Show_Image(0,0,240,240,gImage_LOGO);
 								//¿ªÖ¸Ê¾µÆ
 								HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_SET);
                 while(HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == 0)
