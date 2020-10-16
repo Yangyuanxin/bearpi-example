@@ -192,6 +192,8 @@ void LCD_Clear(uint16_t color)
         LCD_SPI_Send(lcd_buf, LCD_Buf_Size);
     }
 }
+
+
 /**
  * @brief	LCD初始化
  * @param   none
@@ -298,11 +300,7 @@ void LCD_Init(void)
     LCD_Write_Cmd(0x29);
 
     LCD_Address_Set(0, 0, LCD_Width - 1, LCD_Height - 1);
-
-    LCD_Clear(BLACK);
-
-    /*打开显示*/
-    LCD_PWR(1);
+		LCD_Clear(BLACK);
 }
 /**
  * @brief		带颜色画点函数
