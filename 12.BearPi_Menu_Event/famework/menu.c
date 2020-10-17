@@ -7,6 +7,7 @@ static OP_MENU_PAGE g_opStruct[] =
 	{MAIN_PAGE      , main_page_process},	
 	{TEST_PAGE      , test_page_process},
 	{VERSION_PAGE   , version_info_page_process},
+	{CONF_PAGE      ,	conf_page_process},
 };
 
 /*跳转到表所对应的页面*/

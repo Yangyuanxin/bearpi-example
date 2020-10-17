@@ -3,33 +3,22 @@
 //待机
 #define ITEM_STANDBY_X		 			0
 #define ITEM_STANDBY_Y		 			208
-#define ITEM_STANDBY_FONT	 			"待机"
-#define ITEM_STANDBY_FONT_WIDTH  		32
-
 
 //菜单
 #define ITEM_MENU_X		 		 		176
 #define ITEM_MENU_Y		 		 		208
-#define ITEM_MENU_FONT		 			"菜单"
-#define ITEM_MENU_FONT_WIDTH  			32
 
 //测试
 #define ITEM_TEST_X		 		 		73
 #define ITEM_TEST_Y		 		 		92
-#define ITEM_TEST_FONT		 			"测试"
-#define ITEM_TEST_FONT_WIDTH  			48
 
 //上传
 #define ITEM_UPLOAD_X		 		 	73
 #define ITEM_UPLOAD_Y		 		 	92
-#define ITEM_UPLOAD_FONT		 		"上传"
-#define ITEM_UPLOAD_FONT_WIDTH  		48
 
 //版本
 #define ITEM_VERSION_X		 		 	73
 #define ITEM_VERSION_Y		 		 	92
-#define ITEM_VERSION_FONT		 		"版本"
-#define ITEM_VERSION_FONT_WIDTH  		48
 
 uint8_t main_item = 0 ;
 
@@ -37,26 +26,39 @@ uint8_t main_item = 0 ;
 Item Main_Item[] =
 {
     /*隐藏*/
-    {ITEM_STANDBY_X, ITEM_STANDBY_Y, ITEM_STANDBY_FONT, BLACK, BLACK, ITEM_STANDBY_FONT_WIDTH, 1},		//0
-    {ITEM_MENU_X, ITEM_MENU_Y, ITEM_MENU_FONT, BLACK, BLACK, ITEM_MENU_FONT_WIDTH, 1},								//1
-    {ITEM_TEST_X, ITEM_TEST_Y, ITEM_TEST_FONT, BLACK, BLACK, ITEM_TEST_FONT_WIDTH, 1},								//2
+    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "待机", BLACK, BLACK, 32, 1},		//0
+    {ITEM_MENU_X, ITEM_MENU_Y, 			 "菜单", BLACK, BLACK, 32, 1},								//1
     /*显示*/
-    {ITEM_STANDBY_X, ITEM_STANDBY_Y, ITEM_STANDBY_FONT, WHITE, BLACK, ITEM_STANDBY_FONT_WIDTH, 1},		//3
-    {ITEM_MENU_X, ITEM_MENU_Y, ITEM_MENU_FONT, WHITE, BLACK, ITEM_MENU_FONT_WIDTH, 1},								//4
-    {ITEM_TEST_X, ITEM_TEST_Y, ITEM_TEST_FONT, GREEN, BLACK, ITEM_TEST_FONT_WIDTH, 1},								//5
+    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "待机", WHITE, BLACK, 32, 1},		//2
+    {ITEM_MENU_X, ITEM_MENU_Y, 			 "菜单", WHITE, BLACK, 32, 1},								//3
 };
 
 Item Main_Menu_Item[] =
 {
     /*隐藏*/
-    {ITEM_TEST_X, ITEM_TEST_Y, ITEM_TEST_FONT, BLACK, BLACK, ITEM_TEST_FONT_WIDTH, 1},							//0
-    {ITEM_UPLOAD_X, ITEM_UPLOAD_Y, ITEM_UPLOAD_FONT, BLACK, BLACK, ITEM_UPLOAD_FONT_WIDTH, 1},					//1
-    {ITEM_VERSION_X, ITEM_VERSION_Y, ITEM_VERSION_FONT, BLACK, BLACK, ITEM_VERSION_FONT_WIDTH, 1},				//2
+    {ITEM_TEST_X, ITEM_TEST_Y, 		 	 "检测", BLACK, BLACK, 48, 1},							//0
+    {ITEM_UPLOAD_X, ITEM_UPLOAD_Y, 	 "上传", BLACK, BLACK, 48, 1},					//1
+    {ITEM_VERSION_X, ITEM_VERSION_Y, "版本", BLACK, BLACK, 48, 1},				//2
     /*显示*/
-    {ITEM_TEST_X, ITEM_TEST_Y, ITEM_TEST_FONT, GREEN, BLACK, ITEM_TEST_FONT_WIDTH, 1},							//3
-    {ITEM_UPLOAD_X, ITEM_UPLOAD_Y, ITEM_UPLOAD_FONT, GREEN, BLACK, ITEM_UPLOAD_FONT_WIDTH, 1},					//4
-    {ITEM_VERSION_X, ITEM_VERSION_Y, ITEM_VERSION_FONT, GREEN, BLACK, ITEM_VERSION_FONT_WIDTH, 1},				//5
+    {ITEM_TEST_X, ITEM_TEST_Y, 			 "检测", GREEN, BLACK, 48, 1},							//3
+    {ITEM_UPLOAD_X, ITEM_UPLOAD_Y,   "上传", GREEN, BLACK, 48, 1},					//4
+    {ITEM_VERSION_X, ITEM_VERSION_Y, "版本", GREEN, BLACK, 48, 1},				//5
 };
+
+/*底部菜单栏显示*/
+void	main_menu_item_display(uint8_t enable)
+{
+		if(enable == 1)
+		{
+			for(int i = 2 ; i < 4 ; i++)
+          display_menu_item(Main_Item, i);
+		}
+		else if(enable == 0)
+		{
+			for(int i = 0 ; i < 2 ; i++)
+            display_menu_item(Main_Item, i);
+		}
+}
 
 /*显示主页面*/
 void display_main_page(uint8_t enable)
@@ -64,11 +66,9 @@ void display_main_page(uint8_t enable)
     if(enable == 1)
     {
         for(int i = 3 ; i < 6 ; i++)
-        {
-            LCD_ShowChinese(Main_Item[i].x, Main_Item[i].y,
-                            Main_Item[i].Str, Main_Item[i].front_color,
-                            Main_Item[i].back_color, Main_Item[i].font_num, Main_Item[i].mode);
-        }
+            display_menu_item(Main_Menu_Item, i);
+
+        main_menu_item_display(1);
     }
     else if(enable == 0)
     {
@@ -76,6 +76,8 @@ void display_main_page(uint8_t enable)
         LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
         LCD_ShowCharStr(21, 102, 20, "<", BLACK, BLACK, 32);
         LCD_ShowCharStr(203, 102, 20, ">", BLACK, BLACK, 32);
+
+        main_menu_item_display(0);
     }
 }
 
@@ -85,7 +87,7 @@ void main_page_init(void)
     Flow_Cursor.flow_cursor = MAIN_PAGE ;
     //关LCD显示
     LCD_DisplayOff();
-		LCD_Draw_ColorRect(0,35,239,200,WHITE);
+    LCD_Draw_ColorRect(0, 35, 239, 200, WHITE);
     //显示时钟
     Get_Date_Time();
     sprintf(DateTime_Handler_Info.DisPlay_DateBuf, "%04d-%02d-%02d %02d:%02d:%02d", \
@@ -104,6 +106,7 @@ void main_page_init(void)
     LCD_DisplayOn();
 }
 
+
 //选择菜单项
 void Select_Main_Menu_Item(uint8_t item)
 {
@@ -113,21 +116,15 @@ void Select_Main_Menu_Item(uint8_t item)
     switch(item)
     {
         case 0:
-            LCD_ShowChinese(Main_Menu_Item[3].x, Main_Menu_Item[3].y,
-                            Main_Menu_Item[3].Str, Main_Menu_Item[3].front_color,
-                            Main_Menu_Item[3].back_color, Main_Menu_Item[3].font_num, Main_Menu_Item[3].mode);
+            display_menu_item(Main_Menu_Item, 3);
             break ;
 
         case 1:
-            LCD_ShowChinese(Main_Menu_Item[4].x, Main_Menu_Item[4].y,
-                            Main_Menu_Item[4].Str, Main_Menu_Item[4].front_color,
-                            Main_Menu_Item[4].back_color, Main_Menu_Item[4].font_num, Main_Menu_Item[4].mode);
+            display_menu_item(Main_Menu_Item, 4);
             break ;
 
         case 2:
-            LCD_ShowChinese(Main_Menu_Item[5].x, Main_Menu_Item[5].y,
-                            Main_Menu_Item[5].Str, Main_Menu_Item[5].front_color,
-                            Main_Menu_Item[5].back_color, Main_Menu_Item[5].font_num, Main_Menu_Item[5].mode);
+            display_menu_item(Main_Menu_Item, 5);
             break ;
 
         default :
@@ -149,28 +146,14 @@ void Select_Main_Menu(uint8_t Event_Code)
             switch(main_item)
             {
                 case 0:
-					/*隐藏底部显示*/
-                    for(int i = 0 ; i < 2 ; i++)
-                    {
-                        LCD_ShowChinese(Main_Item[i].x, Main_Item[i].y,
-                                        Main_Item[i].Str, Main_Item[i].front_color,
-                                        Main_Item[i].back_color, Main_Item[i].font_num, Main_Item[i].mode);
-                    }
-					display_main_page(0);
-					test_page_init();
+                    display_main_page(0);
+                    test_page_init();
                     break ;
 
                 case 1:
                     break ;
 
                 case 2:
-					/*隐藏底部显示*/
-                    for(int i = 0 ; i < 2 ; i++)
-                    {
-                        LCD_ShowChinese(Main_Item[i].x, Main_Item[i].y,
-                                        Main_Item[i].Str, Main_Item[i].front_color,
-                                        Main_Item[i].back_color, Main_Item[i].font_num, Main_Item[i].mode);
-                    }
                     display_main_page(0);
                     Version_Info_Page_Init();
                     break ;
@@ -205,7 +188,10 @@ void main_page_process(uint8_t Event_Code)
             sleep_page_init();
             break ;
 
+				/*长按右键*/
         case RIGHT_LONG:
+						display_main_page(0);
+						conf_page_ui_init();
             break ;
 
         default:

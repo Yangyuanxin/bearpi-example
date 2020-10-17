@@ -262,8 +262,7 @@ void sd_show_picture_bin(TCHAR const* OpenOrCreatTXTFileName)//LCDœ‘ æSD÷– bin Õ
 int main(void)
 {
     /* USER CODE BEGIN 1 */
-    uint32_t Total = 0; //∂¡»°SDø®◊‹»›¡ø
-    uint32_t Free = 0; //∂¡»°SDø® £”‡»›¡ø
+
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/

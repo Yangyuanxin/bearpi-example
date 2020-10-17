@@ -81,64 +81,36 @@ void icon_reflash(uint8_t status)
 void display_base(uint8_t enable)
 {
     if(enable == 1)
-    {
-        LCD_ShowChinese(Test_Item[0].x, Test_Item[0].y,
-                        Test_Item[0].Str, Test_Item[0].front_color,
-                        Test_Item[0].back_color, Test_Item[0].font_num, Test_Item[0].mode);
-    }
+        display_menu_item(Test_Item,0);
     else if(enable == 0)
-    {
-        /*Òþ²Ø*/
         LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
-    }
 }
 
 /*ÏÔÊ¾¼ì²â1Òþ²Ø0*/
 void display_detect(uint8_t enable)
 {
     if(enable == 1)
-    {
-        LCD_ShowChinese(Test_Item[1].x, Test_Item[1].y,
-                        Test_Item[1].Str, Test_Item[1].front_color,
-                        Test_Item[1].back_color, Test_Item[1].font_num, Test_Item[1].mode);
-    }
+			display_menu_item(Test_Item,1);
     else if(enable == 0)
-    {
-        /*Òþ²Ø*/
-        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
-    }
+      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 }
 
 /*ÏÔÊ¾°²È«1Òþ²Ø0*/
 void display_safety(uint8_t enable)
 {
     if(enable == 1)
-    {
-        LCD_ShowChinese(Test_Item[2].x, Test_Item[2].y,
-                        Test_Item[2].Str, Test_Item[2].front_color,
-                        Test_Item[2].back_color, Test_Item[2].font_num, Test_Item[2].mode);
-    }
+      display_menu_item(Test_Item,2);
     else if(enable == 0)
-    {
-        /*Òþ²Ø*/
-        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
-    }
+      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 }
 
 /*ÏÔÊ¾Î£ÏÕ1Òþ²Ø0*/
 void display_danger(uint8_t enable)
 {
     if(enable == 1)
-    {
-        LCD_ShowChinese(Test_Item[3].x, Test_Item[3].y,
-                        Test_Item[3].Str, Test_Item[3].front_color,
-                        Test_Item[3].back_color, Test_Item[3].font_num, Test_Item[3].mode);
-    }
+			display_menu_item(Test_Item,3);
     else if(enable == 0)
-    {
-        /*Òþ²Ø*/
-        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
-    }
+      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
 }
 
 /*ÏÔÊ¾½ø¶ÈÌõ¿ò*/

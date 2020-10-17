@@ -43,13 +43,13 @@ extern "C" {
 #include "multi_timer.h"
 #include "lcd_spi2_drv.h"
 
-
 #include "menu.h"
 #include "menu_ui.h"
 
 #include "logic.h"
 #include "test_ui.h"
 #include "main_ui.h"
+#include "conf_ui.h"
 #include "sleep_ui.h"
 #include "version_info_ui.h"
 /* USER CODE END Includes */

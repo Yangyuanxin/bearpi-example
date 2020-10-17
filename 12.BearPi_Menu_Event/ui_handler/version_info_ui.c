@@ -60,11 +60,12 @@ void version_info_page_process(uint8_t KeyValue)
             display_version_info(0);
             LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", BLACK, BLACK, 32, 1);
             Flow_Cursor.flow_cursor = MAIN_PAGE ;
-						//显示左边界符号
-						LCD_ShowCharStr(21, 102, 20, "<", BLACK, GREEN, 32);
-						Select_Main_Menu_Item(main_item);
-						//显示右边界符号
-						LCD_ShowCharStr(203, 102, 20, ">", BLACK, GREEN, 32);
+            //显示左边界符号
+            LCD_ShowCharStr(21, 102, 20, "<", BLACK, GREEN, 32);
+            Select_Main_Menu_Item(main_item);
+						main_menu_item_display(1);
+            //显示右边界符号
+            LCD_ShowCharStr(203, 102, 20, ">", BLACK, GREEN, 32);
             break ;
 
         default:

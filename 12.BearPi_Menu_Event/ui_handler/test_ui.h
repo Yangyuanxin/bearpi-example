@@ -11,12 +11,12 @@
 
 typedef struct
 {
-	int Test_Process ;		/*测试进度*/
-	__IO uint8_t Detect_Step ; /*检测步骤*/
-	uint8_t Start_Detect;	/*开始测试标志*/
-	uint8_t Count_Base  ; /*统计基准次数*/
-	uint8_t Count_Alarm ;	/*统计报警次数*/
-}Detect_Logic;
+    int Test_Process ;		/*测试进度*/
+    __IO uint8_t Detect_Step ; /*检测步骤*/
+    uint8_t Start_Detect;	/*开始测试标志*/
+    uint8_t Count_Base  ; /*统计基准次数*/
+    uint8_t Count_Alarm ;	/*统计报警次数*/
+} Detect_Logic;
 extern Detect_Logic detect_logic ;
 
 #define ALARM_THRESHOLD 600 //600ppm
@@ -31,7 +31,7 @@ void Display_Process_Bar_Frame(int enable);
 /*显示1隐藏0进度条*/
 void Display_Process_Bar(int Process, int enable);
 /*显示烟感值*/
-void display_smoke_value(int smoke_value,uint16_t color,uint8_t enable);
+void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable);
 
 /*显示基准1隐藏0*/
 void display_base(uint8_t enable);

@@ -36,12 +36,15 @@ typedef enum
 	MAIN_PAGE,
 	TEST_PAGE,
 	VERSION_PAGE,
+	CONF_PAGE
 }OP_PAGE;
 
 /*菜单初始化*/
 void Menu_Init(void);
-
-
+/*显示菜单文字项*/
+void display_menu_item(Item item_struct[],uint8_t item);
+/*显示菜单文字项*/
+void display_menu_color_item(Item item_struct[],uint8_t item,uint16_t front_color);
 
 #endif //__MENU_UI_H
 
