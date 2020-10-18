@@ -2,6 +2,9 @@
 #define  __TEST_UI_H
 #include "main.h"
 
+#define DETECT_LOGO_X 76
+#define DETECT_LOGO_Y	40
+
 //¼ì²â×´Ì¬»ú
 #define BASE_LINE 0
 #define DETECTING 1

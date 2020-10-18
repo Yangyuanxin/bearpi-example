@@ -93,7 +93,7 @@ static void LCD_SPI_Send(uint8_t *data, uint16_t size)
  * @param   cmd —— 需要发送的命令
  * @return  none
  */
-static void LCD_Write_Cmd(uint8_t cmd)
+void LCD_Write_Cmd(uint8_t cmd)
 {
     LCD_WR_RS(0);
     LCD_SPI_Send(&cmd, 1);
@@ -104,7 +104,7 @@ static void LCD_Write_Cmd(uint8_t cmd)
  * @param 	dat —— 需要发送的数据
  * @return  none
  */
-static void LCD_Write_Data(uint8_t dat)
+void LCD_Write_Data(uint8_t dat)
 {
     LCD_WR_RS(1);
     LCD_SPI_Send(&dat, 1);
@@ -114,7 +114,7 @@ static void LCD_Write_Data(uint8_t dat)
  * @param   dat —— 需要发送的16bit数据
  * @return  none
  */
-static void LCD_Write_2Byte(const uint16_t dat)
+void LCD_Write_2Byte(const uint16_t dat)
 {
     uint8_t data[2] = {0};
 
@@ -146,6 +146,31 @@ void LCD_Address_Set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 
     LCD_Write_Cmd(0x2C);
 }
+
+/**
+  * 函数功能: 在LCD显示器上开辟一个窗口
+  * 输入参数: usX ：在特定扫描方向下窗口的起点X坐标
+  *           usY ：在特定扫描方向下窗口的起点Y坐标
+  *           usWidth ：窗口的宽度
+  *           usHeight ：窗口的高度
+  * 返 回 值: 无
+  * 说    明：无
+  */
+void LCD_OpenWindow(uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight)
+{	
+	LCD_Write_Cmd(0x2A ); 				       /* 设置X坐标 */
+	LCD_Write_Data(usX>>8);	             /* 设置起始点：先高8位 */
+	LCD_Write_Data(usX&0xff);	           /* 然后低8位 */
+	LCD_Write_Data((usX+usWidth-1)>>8);  /* 设置结束点：先高8位 */
+	LCD_Write_Data((usX+usWidth-1)&0xff);/* 然后低8位 */
+
+	LCD_Write_Cmd(0x2B); 			           /* 设置Y坐标*/
+	LCD_Write_Data(usY>>8);              /* 设置起始点：先高8位 */
+	LCD_Write_Data(usY&0xff);            /* 然后低8位 */
+	LCD_Write_Data((usY+usHeight-1)>>8); /* 设置结束点：先高8位 */
+	LCD_Write_Data((usY+usHeight-1)&0xff);/* 然后低8位 */
+}
+
 /**
  * @breif	打开LCD显示背光
  * @param   none
@@ -252,8 +277,8 @@ void LCD_Init(void)
 
     /* Frame Rate Control in Normal Mode */
     LCD_Write_Cmd(0xC6);
-   // LCD_Write_Data(0x0F);	//60MHZ
-		LCD_Write_Data(0x01);		//111MHz 提升屏的刷新速度
+   // LCD_Write_Data(0x0F);	//60HZ
+		LCD_Write_Data(0x01);		//111Hz 提升屏的刷新速度
 
     /* Power Control 1 */
     LCD_Write_Cmd(0xD0);

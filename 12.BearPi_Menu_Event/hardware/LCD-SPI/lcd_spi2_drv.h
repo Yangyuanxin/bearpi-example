@@ -56,9 +56,11 @@
 #define BLUE          0x001F    //À¶É«
 #define BLACK         0x0000	//ºÚÉ«
 
-
-
+void LCD_Write_Cmd(uint8_t cmd);
+void LCD_Write_Data(uint8_t dat);
+void LCD_Write_2Byte(const uint16_t dat);
 void LCD_Address_Set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2);
+void LCD_OpenWindow(uint16_t usX, uint16_t usY, uint16_t usWidth, uint16_t usHeight);
 void LCD_DisplayOn(void);
 void LCD_DisplayOff(void);
 void LCD_Clear(uint16_t color);

@@ -24,10 +24,10 @@ Conf_Page conf_page_ui ;
 /*配置页面菜单项显示*/
 Item Conf_Item_Title_Display[] =
 {
-		/*显示*/
-    {MENU_X, MENU_Y,  						"菜单", GREEN, BLACK, 24, 1},		
-		/*隐藏*/
-    {MENU_X, MENU_Y,  						"菜单", BLACK, BLACK, 24, 1},		
+    /*显示*/
+    {MENU_X, MENU_Y,  						"菜单", GREEN, BLACK, 24, 1},
+    /*隐藏*/
+    {MENU_X, MENU_Y,  						"菜单", BLACK, BLACK, 24, 1},
 };
 
 /*配置页面菜单项显示*/
@@ -46,28 +46,29 @@ Item Conf_Item_Display[] =
 };
 
 /*选择菜单项目*/
-void select_conf_item(uint8_t item)
+void select_conf_item(uint8_t item,uint16_t color)
 {
-		LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-		LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-		LCD_ShowCharStr(ICON_X, DEBUG_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-		LCD_ShowCharStr(ICON_X, DEVICE_INFO_SETTING_Y, 24, "#", BLACK, BLACK, 24);
+    LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, BLACK, 24);
+    LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, BLACK, 24);
+    LCD_ShowCharStr(ICON_X, DEBUG_SETTING_Y, 24, "#", BLACK, BLACK, 24);
+    LCD_ShowCharStr(ICON_X, DEVICE_INFO_SETTING_Y, 24, "#", BLACK, BLACK, 24);
+
     switch(item)
     {
         case 0:
-            LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, RED, 24);
+            LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, color, 24);
             break ;
 
         case 1:
-            LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, RED, 24);
+            LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, color, 24);
             break ;
 
         case 2:
-            LCD_ShowCharStr(ICON_X, DEBUG_SETTING_Y, 24, "#", BLACK, RED, 24);
+            LCD_ShowCharStr(ICON_X, DEBUG_SETTING_Y, 24, "#", BLACK, color, 24);
             break ;
 
         case 3:
-            LCD_ShowCharStr(ICON_X, DEVICE_INFO_SETTING_Y, 24, "#", BLACK, RED, 24);
+            LCD_ShowCharStr(ICON_X, DEVICE_INFO_SETTING_Y, 24, "#", BLACK, color, 24);
             break ;
 
         default:
@@ -79,71 +80,43 @@ void select_conf_item(uint8_t item)
 void conf_page_ui_init(void)
 {
     Flow_Cursor.flow_cursor = CONF_PAGE ;
-		
+
     /*默认选择第0项*/
     conf_page_ui.select_item = 0 ;
-		display_menu_item(Conf_Item_Title_Display,0);
+    display_menu_item(Conf_Item_Title_Display, 0);
+
     for(int i = 0 ; i < 4 ; i++)
         display_menu_item(Conf_Item_Display, i);
 
-    select_conf_item(conf_page_ui.select_item);
-	
-		LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", GREEN, BLACK, 32, 1);
+    select_conf_item(conf_page_ui.select_item,RED);
+
+    LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", GREEN, BLACK, 32, 1);
 }
 
-
-
-//配置页面按键处理
-void conf_page_process(uint8_t Event_Code)
+//进入某一配置项
+void enter_conf_item(uint8_t item)
 {
-    switch(Event_Code)
+    switch(item)
     {
-        //上翻
-        case LEFT:
-            (conf_page_ui.select_item > 0) ? (conf_page_ui.select_item--) : (conf_page_ui.select_item = 3);
-						select_conf_item(conf_page_ui.select_item);
+        //阈值设置
+        case 0:
             break ;
 
-        //下翻
-        case RIGHT:
-            (conf_page_ui.select_item < 3) ? (conf_page_ui.select_item++) : (conf_page_ui.select_item = 0);
-						select_conf_item(conf_page_ui.select_item);
+        //报警设置
+        case 1:
             break ;
 
-        //进入某一项
-        case LEFT_LONG:
+        //调试模式
+        case 2:
             break ;
 
-        //退出菜单回到主菜单
-        case RIGHT_LONG:
-						LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", BLACK, BLACK, 32, 1);
-						display_menu_item(Conf_Item_Title_Display,1);
+        //仪器信息
+        case 3:
+            display_menu_item(Conf_Item_Title_Display, 1);
             for(int i = 4 ; i < 8 ; i++)
                 display_menu_item(Conf_Item_Display, i);
-						switch(conf_page_ui.select_item)
-						{
-							case 0:
-								LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-								break ;
-							case 1:
-								LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-								break ;
-							case 2:
-								LCD_ShowCharStr(ICON_X, DEBUG_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-								break ;
-							case 3:
-								LCD_ShowCharStr(ICON_X, DEVICE_INFO_SETTING_Y, 24, "#", BLACK, BLACK, 24);
-								break ;
-							default:
-								break ; 
-						}
-            Flow_Cursor.flow_cursor = MAIN_PAGE ;
-            //显示左边界符号
-            LCD_ShowCharStr(21, 102, 20, "<", BLACK, GREEN, 32);
-            Select_Main_Menu_Item(main_item);
-            main_menu_item_display(1);
-            //显示右边界符号
-            LCD_ShowCharStr(203, 102, 20, ">", BLACK, GREEN, 32);
+						select_conf_item(conf_page_ui.select_item,BLACK);
+            Version_Info_Page_Init();
             break ;
 
         default:
@@ -152,7 +125,47 @@ void conf_page_process(uint8_t Event_Code)
 }
 
 
-		
-		
-		
+//配置页面按键处理
+void conf_page_process(uint8_t Event_Code)
+{
+    switch(Event_Code)
+    {
+        //切换到下一项
+        case LEFT:
+            (conf_page_ui.select_item < 3) ? (conf_page_ui.select_item++) : (conf_page_ui.select_item = 0);
+            select_conf_item(conf_page_ui.select_item,RED);
+            break ;
+
+        //进入某一项
+        case RIGHT:
+						LCD_DisplayOff();
+            enter_conf_item(conf_page_ui.select_item);
+						LCD_DisplayOn();
+            break ;
+
+        //退出菜单回到主菜单
+        case RIGHT_LONG:
+						LCD_DisplayOff();
+						select_conf_item(conf_page_ui.select_item,BLACK);
+            LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", BLACK, BLACK, 32, 1);
+            display_menu_item(Conf_Item_Title_Display, 1);
+
+            for(int i = 4 ; i < 8 ; i++)
+                display_menu_item(Conf_Item_Display, i);
+            
+            Flow_Cursor.flow_cursor = MAIN_PAGE ;
+            Select_Main_Menu_Item(main_item);
+            main_menu_item_display(1);
+						LCD_DisplayOn();
+            break ;
+
+        default:
+            break ;
+    }
+}
+
+
+
+
+
 

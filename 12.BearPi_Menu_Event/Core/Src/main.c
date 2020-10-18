@@ -30,7 +30,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bsp_bmp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -93,10 +93,11 @@ void DataTime_Timer_CallBack(void)
 /*测试回调*/
 void Test_CallBack(void)
 {
+		
     static uint8_t Count_AMI = 0;
     static uint8_t Refresh_flag = 0 ;
     int smoke_value = 0 ;
-
+		static uint8_t display_result_flag = 0 ;
     if(Flow_Cursor.flow_cursor == TEST_PAGE && detect_logic.Start_Detect == 1)
     {
         switch(detect_logic.Detect_Step)
@@ -104,7 +105,7 @@ void Test_CallBack(void)
             case BASE_LINE:
                 Count_AMI++ ;
 
-                if(Count_AMI >= 3)
+                if(Count_AMI > 2)
                     Count_AMI = 0 ;
 
                 icon_reflash(Count_AMI);
@@ -123,6 +124,7 @@ void Test_CallBack(void)
                 if(detect_logic.Count_Base > 10)
                 {
                     detect_logic.Count_Base = 0 ;
+										display_result_flag = 0 ;
                     /*隐藏基准*/
                     display_base(0);
                     /*显示检测*/
@@ -139,7 +141,7 @@ void Test_CallBack(void)
             case DETECTING:
                 Count_AMI++ ;
 
-                if(Count_AMI >= 3)
+                if(Count_AMI > 2)
                     Count_AMI = 0 ;
 
                 icon_reflash(Count_AMI);
@@ -160,16 +162,16 @@ void Test_CallBack(void)
                 else
                 {
                     smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-
-                    //printf("检测:%d\n",smoke_value);
                     if(mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
+										{
                         display_smoke_value(smoke_value, GREEN, 1);
+										}
                     else
                     {
                         display_smoke_value(smoke_value, RED, 1);
                         detect_logic.Count_Alarm++ ;
 
-                        if(detect_logic.Count_Alarm > 20)
+                        if(detect_logic.Count_Alarm > 5)
                         {
                             detect_logic.Detect_Step = DETECT_DANGER ;
                             detect_logic.Count_Alarm = 0 ;
@@ -179,7 +181,6 @@ void Test_CallBack(void)
                             display_detect(0);
                             /*显示危险*/
                             display_danger(1);
-                            icon_reflash(4);
                             break ;
                         }
                     }
@@ -190,8 +191,13 @@ void Test_CallBack(void)
                 break ;
 
             case DETECT_SAFETY:
-                icon_reflash(4);
                 detect_logic.Start_Detect = 0 ;
+								if(display_result_flag == 0)
+								{
+									display_result_flag = 1 ;
+									smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+									display_smoke_value(smoke_value, GREEN, 1);
+								}
                 break ;
 
             case DETECT_DANGER:
@@ -200,6 +206,12 @@ void Test_CallBack(void)
                 display_danger(Refresh_flag);
                 mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
                 mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_flag);
+								if(display_result_flag == 0)
+								{
+									display_result_flag = 1 ;
+									smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+									display_smoke_value(smoke_value, RED, 1);
+								}
                 break ;
 
             default:
@@ -209,50 +221,9 @@ void Test_CallBack(void)
 }
 
 
-FATFS fs;	// FatFs文件系统对象
-FIL file;	// 文件对象
-FRESULT f_res;     //文件操作结果
-uint8_t f_GetTotal_Free(uint8_t *drv, uint32_t *total, uint32_t *free)
-{
-    FATFS *fs1;
-    uint8_t res;
-    DWORD fre_clust = 0, fre_sect = 0, tot_sect = 0;
-    f_res = f_mount(fs1, (TCHAR const*)SDPath, 1);
-    res = f_getfree((const TCHAR*)drv, &fre_clust, &fs1);//得到磁盘信息及空闲簇数量
-
-    if(res == 0)
-    {
-        tot_sect = (fs1->n_fatent - 2) * fs1->csize; //得到总扇区数
-        fre_sect = fre_clust * fs1->csize;        //得到空闲扇区数
-        #if _MAX_SS!=512                                  //扇区大小不是512字节,则转换为512字节
-        tot_sect *= fs1->ssize / 512;
-        fre_sect *= fs1->ssize / 512;
-        #endif
-        *total = tot_sect >> 1; //单位为KB
-        *free = fre_sect >> 1; //单位为KB
-    }
-
-    f_res = f_mount(NULL, (TCHAR const*)SDPath, 1);	// 不再使用，取消挂载
-    return res;
-}
-
-void sd_show_picture_bin(TCHAR const* OpenOrCreatTXTFileName)//LCD显示SD中 bin 图片 //通过关闭屏幕背光达到卡点效果
-{
-    UINT br;
-    uint16_t i;
-    uint8_t data[1200]; //存储五行像素点240 的 16进制颜色信息 240*5=1200
-    f_res = f_mount(&fs, (TCHAR const*)SDPath, 1); //挂载时会对SD卡初始化
-    f_res = f_open(&file, OpenOrCreatTXTFileName, FA_READ);
-
-    for(i = 0; i < 96; i++)
-    {
-        f_res = f_read(&file, data, 1200, &br); //x方向240个像素点，每个像素点 2 个
-        SPI2_WriteByte(data, 1200); //显示 5 行像素点
-
-    }
-
-    f_close(&file);
-}
+FATFS fs;													/* FatFs文件系统对象 */
+FRESULT f_res;                    /* 文件操作结果 */
+#define START_LOGO	"0:/UI/start_logo/start_logo.bmp"
 /* USER CODE END 0 */
 
 /**
@@ -292,13 +263,16 @@ int main(void)
     MX_FATFS_Init();
     /* USER CODE BEGIN 2 */
     PowerOn();
+		printf("小熊派气体传感器系统\n");
     LCD_Init();
-    sd_show_picture_bin("Start_Logo.bin");
-    LCD_DisplayOn();
-    HAL_Delay(3000);
+		//在串行FLASH挂载文件系统，文件系统挂载时会对串行FLASH初始化
+    f_res = f_mount(&fs, (TCHAR const*)SDPath, 1);
+    if(f_res == FR_OK)
+      printf("》SD卡文件系统挂载成功\n");
+		Lcd_show_bmp(0,0,START_LOGO);
+		LCD_DisplayOn();
+		HAL_Delay(3000);
     Sensor_Register(&mq2_sensor_interface);
-    printf("led_status:%d\n", mq2_sensor_interface.get_led_status(&mq2_sensor_interface));
-    printf("buzzer_status:%d\n", mq2_sensor_interface.get_buzzer_status(&mq2_sensor_interface));
     /*注册并启动时钟显示定时器  1000ms一次*/
     timer_init(&DataTime_Timer, DataTime_Timer_CallBack, TIMER_TIMEOUT, TIMER_TIMEOUT);
     timer_start(&DataTime_Timer);

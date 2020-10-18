@@ -1,79 +1,71 @@
 #include "test_ui.h"
-
-#define SMOKE_X 66
-#define SMOKE_Y 140
+#include "bsp_bmp.h"
 
 Detect_Logic detect_logic ;
 
-//动画图标
-#define AMI_X										115
-#define AMI_Y										60
-#define ITEM_AMI_FONT_WIDTH  		32
+/*基准图标*/
+#define B0_LOGO "0:/UI/detect_page/b0.bmp"
+#define B1_LOGO "0:/UI/detect_page/b1.bmp"
+#define B2_LOGO "0:/UI/detect_page/b2.bmp"
 
-//基准
-#define ITEM_BASE_X		 		 			73
-#define ITEM_BASE_Y		 		 			92
-#define ITEM_BASE_FONT		 			"基准"
-#define ITEM_BASE_FONT_WIDTH  	48
+/*检测图标*/
+#define D0_LOGO "0:/UI/detect_page/d0.bmp"
+#define D1_LOGO "0:/UI/detect_page/d1.bmp"
+#define D2_LOGO "0:/UI/detect_page/d2.bmp"
 
-//检测中
-#define ITEM_DETECT_X		 		 			73
-#define ITEM_DETECT_Y		 		 			92
-#define ITEM_DETECT_FONT		 			"检测"
-#define ITEM_DETECT_FONT_WIDTH  	48
+/*安全图标*/
+#define R0_LOGO "0:/UI/detect_page/r0.bmp"
+/*危险图标*/
+#define R1_LOGO "0:/UI/detect_page/r1.bmp"
 
+/*烟感值显示*/
+#define SMOKE_X 74
+#define SMOKE_Y 130 + 24
 
-//安全
-#define ITEM_SAFE_X		 		 		73
-#define ITEM_SAFE_Y		 		 		92
-#define ITEM_SAFE_FONT		 			"安全"
-#define ITEM_SAFE_FONT_WIDTH  			48
-
-//危险
-#define ITEM_DANGER_X		 		 	73
-#define ITEM_DANGER_Y		 		 	92
-#define ITEM_DANGER_FONT		 		"危险"
-#define ITEM_DANGER_FONT_WIDTH  		48
-
-Item Test_Item[] =
-{
-    /*显示*/
-    {ITEM_BASE_X, ITEM_BASE_Y, ITEM_BASE_FONT, GREEN, BLACK, ITEM_BASE_FONT_WIDTH, 1},								  //0
-    {ITEM_DETECT_X, ITEM_DETECT_Y, ITEM_DETECT_FONT, GREEN, BLACK, ITEM_DETECT_FONT_WIDTH, 1},					//1
-    {ITEM_SAFE_X, ITEM_SAFE_Y, ITEM_SAFE_FONT, GREEN, BLACK, ITEM_SAFE_FONT_WIDTH, 1},									//2
-    {ITEM_DANGER_X, ITEM_DANGER_Y, ITEM_DANGER_FONT, RED, BLACK, ITEM_DANGER_FONT_WIDTH, 1},						//3
-};
 
 
 //刷新动画
 void icon_reflash(uint8_t status)
 {
-    switch(status)
+    if(detect_logic.Detect_Step == BASE_LINE)
     {
-        case 0:
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "/", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
-            break ;
+        switch(status)
+        {
+            case 0:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, B0_LOGO);
+                break ;
 
-        case 1:
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
-            break ;
+            case 1:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, B1_LOGO);
+                break ;
 
-        case 2:
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "\\", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
-            break ;
+            case 2:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, B2_LOGO);
+                break ;
 
-        case 3:
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, GREEN, ITEM_AMI_FONT_WIDTH);
-            break ;
+            default:
+                break ;
+        }
+    }
+    else if(detect_logic.Detect_Step == DETECTING)
+    {
+        switch(status)
+        {
+            case 0:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, D0_LOGO);
+                break ;
 
-        case 4:
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "/", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "-", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
-            LCD_ShowCharStr(AMI_X, AMI_Y, 100, "\\", BLACK, BLACK, ITEM_AMI_FONT_WIDTH);
-            break ;
+            case 1:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, D1_LOGO);
+                break ;
 
-        default:
-            break ;
+            case 2:
+                Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, D2_LOGO);
+                break ;
+
+            default:
+                break ;
+        }
     }
 }
 
@@ -81,36 +73,60 @@ void icon_reflash(uint8_t status)
 void display_base(uint8_t enable)
 {
     if(enable == 1)
-        display_menu_item(Test_Item,0);
+    {
+        Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, B2_LOGO);
+        LCD_ShowChinese(94, 130, (uint8_t *)"基准", WHITE, BLACK, 24, 1);
+    }
     else if(enable == 0)
-        LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    {
+        LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
+        LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
+    }
 }
 
 /*显示检测1隐藏0*/
 void display_detect(uint8_t enable)
 {
     if(enable == 1)
-			display_menu_item(Test_Item,1);
+    {
+        Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, D2_LOGO);
+        LCD_ShowChinese(94, 130, (uint8_t *)"检测", WHITE, BLACK, 24, 1);
+    }
     else if(enable == 0)
-      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    {
+        LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
+        LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
+    }
 }
 
 /*显示安全1隐藏0*/
 void display_safety(uint8_t enable)
 {
     if(enable == 1)
-      display_menu_item(Test_Item,2);
+    {
+        Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, R0_LOGO);
+        LCD_ShowChinese(94, 130, (uint8_t *)"安全", GREEN, BLACK, 24, 1);
+    }
     else if(enable == 0)
-      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    {
+        LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
+        LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
+    }
 }
 
 /*显示危险1隐藏0*/
 void display_danger(uint8_t enable)
 {
     if(enable == 1)
-			display_menu_item(Test_Item,3);
+    {
+        Lcd_show_bmp(DETECT_LOGO_X, DETECT_LOGO_Y, R1_LOGO);
+        LCD_ShowChinese(94, 130, (uint8_t *)"危险", RED, BLACK, 24, 1);
+    }
     else if(enable == 0)
-      LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+    {
+        LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
+        LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
+    }
 }
 
 /*显示进度条框*/
@@ -154,9 +170,9 @@ void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable)
             smoke_value / 10 % 10, smoke_value % 10);
 
     if(enable == 1)
-        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, color, 32);
+        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, color, 24);
     else if(enable == 0)
-        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, BLACK, 32);
+        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, BLACK, 24);
 }
 
 
@@ -190,7 +206,7 @@ void test_page_process(uint8_t Event_Code)
             detect_logic.Start_Detect = 1 ;
             Display_Process_Bar(0, 0);
             display_smoke_value(0, BLACK, 0);
-            LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
+						LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
             detect_logic.Count_Base = 0 ;
             /*显示基准*/
             display_base(1);
@@ -208,7 +224,7 @@ void test_page_process(uint8_t Event_Code)
             display_smoke_value(0, BLACK, 0);
             LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
             display_safety(1);
-            icon_reflash(4);
+            LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
             break ;
 
         /*退出*/
@@ -220,7 +236,7 @@ void test_page_process(uint8_t Event_Code)
             detect_logic.Test_Process = 0 ;
             detect_logic.Start_Detect = 0 ;
             LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
-            icon_reflash(4);
+            LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
             LCD_DisplayOff();
             Display_Process_Bar(0, 0);
             display_smoke_value(0, BLACK, 0);
