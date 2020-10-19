@@ -12,8 +12,12 @@
 #define LOGO_X	55
 #define LOGO_Y 	55
 
+
+//ºÏ≤‚
 #define DETECT_LOGO "0:/UI/main_page/detect_logo.bmp"
+//º«¬º
 #define LOG_LOGO 		"0:/UI/main_page/log_logo.bmp"
+//≈‰÷√
 #define CONF_LOGO 		"0:/UI/main_page/conf_logo.bmp"
 
 

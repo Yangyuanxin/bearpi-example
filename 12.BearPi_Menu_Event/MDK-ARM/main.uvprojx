@@ -184,7 +184,6 @@
             <hadXRAM>0</hadXRAM>
             <uocXRam>0</uocXRam>
             <RvdsVP>2</RvdsVP>
-            <RvdsMve>0</RvdsMve>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
@@ -643,6 +642,11 @@
               <FilePath>..\ui_handler\test_ui.c</FilePath>
             </File>
             <File>
+              <FileName>conf_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ui_handler\conf_ui.c</FilePath>
+            </File>
+            <File>
               <FileName>main_ui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ui_handler\main_ui.c</FilePath>
@@ -653,14 +657,24 @@
               <FilePath>..\ui_handler\sleep_ui.c</FilePath>
             </File>
             <File>
+              <FileName>threshold_ui .c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ui_handler\threshold_ui .c</FilePath>
+            </File>
+            <File>
               <FileName>version_info_ui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ui_handler\version_info_ui.c</FilePath>
             </File>
             <File>
-              <FileName>conf_ui.c</FileName>
+              <FileName>alarm_setting_ui.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\ui_handler\conf_ui.c</FilePath>
+              <FilePath>..\ui_handler\alarm_setting_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>debug_mode_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ui_handler\debug_mode_ui.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -676,6 +690,11 @@
               <FileName>bsp_bmp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\logic\bsp_bmp.c</FilePath>
+            </File>
+            <File>
+              <FileName>para.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\logic\para.c</FilePath>
             </File>
           </Files>
         </Group>
