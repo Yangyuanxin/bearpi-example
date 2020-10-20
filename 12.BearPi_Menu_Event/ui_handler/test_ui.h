@@ -12,16 +12,7 @@
 #define DETECT_DANGER 3
 #define NULL_STATUS   99
 
-typedef struct
-{
-    int Test_Process ;		/*测试进度*/
-    __IO uint8_t Detect_Step ; /*检测步骤*/
-    uint8_t Start_Detect;	/*开始测试标志*/
-    uint8_t Count_Base  ; /*统计基准次数*/
-    uint8_t Count_Alarm ;	/*统计报警次数*/
-} Detect_Logic;
-extern Detect_Logic detect_logic ;
-
+/*报警阈值*/
 #define ALARM_THRESHOLD 600 //600ppm
 
 

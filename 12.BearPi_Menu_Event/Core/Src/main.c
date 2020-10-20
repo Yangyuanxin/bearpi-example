@@ -79,6 +79,7 @@ void Key_CallBack()
     }
 }
 
+
 /*RTC实时时钟显示*/
 void DataTime_Timer_CallBack(void)
 {
@@ -93,131 +94,13 @@ void DataTime_Timer_CallBack(void)
 /*测试回调*/
 void Test_CallBack(void)
 {
-		
-    static uint8_t Count_AMI = 0;
-    static uint8_t Refresh_flag = 0 ;
-    int smoke_value = 0 ;
-		static uint8_t display_result_flag = 0 ;
-    if(Flow_Cursor.flow_cursor == TEST_PAGE && detect_logic.Start_Detect == 1)
-    {
-        switch(detect_logic.Detect_Step)
-        {
-            case BASE_LINE:
-                Count_AMI++ ;
-
-                if(Count_AMI > 2)
-                    Count_AMI = 0 ;
-
-                icon_reflash(Count_AMI);
-                smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-
-                if(smoke_value < ALARM_THRESHOLD / 2)
-                {
-                    display_smoke_value(smoke_value, GREEN, 1);
-                    ++detect_logic.Count_Base ;
-                }
-                else
-                {
-                    display_smoke_value(smoke_value, RED, 1);
-                }
-
-                if(detect_logic.Count_Base > 10)
-                {
-                    detect_logic.Count_Base = 0 ;
-										display_result_flag = 0 ;
-                    /*隐藏基准*/
-                    display_base(0);
-                    /*显示检测*/
-                    display_detect(1);
-                    /*显示进度条框*/
-                    Display_Process_Bar_Frame(1);
-                    /*切换到检测中*/
-                    detect_logic.Detect_Step = DETECTING ;
-                    break ;
-                }
-
-                break ;
-
-            case DETECTING:
-                Count_AMI++ ;
-
-                if(Count_AMI > 2)
-                    Count_AMI = 0 ;
-
-                icon_reflash(Count_AMI);
-                ++detect_logic.Test_Process ;
-
-                /*测试安全*/
-                if(detect_logic.Test_Process == 100 && mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
-                {
-                    detect_logic.Detect_Step = DETECT_SAFETY ;
-                    Display_Process_Bar(0, 0);
-                    display_smoke_value(smoke_value, BLACK, 0);
-                    /*隐藏检测*/
-                    display_detect(0);
-                    /*显示安全*/
-                    display_safety(1);
-                    break ;
-                }
-                else
-                {
-                    smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-                    if(mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
-										{
-                        display_smoke_value(smoke_value, GREEN, 1);
-										}
-                    else
-                    {
-                        display_smoke_value(smoke_value, RED, 1);
-                        detect_logic.Count_Alarm++ ;
-
-                        if(detect_logic.Count_Alarm > 5)
-                        {
-                            detect_logic.Detect_Step = DETECT_DANGER ;
-                            detect_logic.Count_Alarm = 0 ;
-                            display_smoke_value(smoke_value, BLACK, 0);
-                            Display_Process_Bar(0, 0);
-                            /*隐藏检测*/
-                            display_detect(0);
-                            /*显示危险*/
-                            display_danger(1);
-                            break ;
-                        }
-                    }
-
-                    Display_Process_Bar(detect_logic.Test_Process, 1);
-                }
-
-                break ;
-
-            case DETECT_SAFETY:
-                detect_logic.Start_Detect = 0 ;
-								if(display_result_flag == 0)
-								{
-									display_result_flag = 1 ;
-									smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-									display_smoke_value(smoke_value, GREEN, 1);
-								}
-                break ;
-
-            case DETECT_DANGER:
-                /*危险闪烁*/
-                Refresh_flag = !Refresh_flag ;
-                display_danger(Refresh_flag);
-                mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
-                mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_flag);
-								if(display_result_flag == 0)
-								{
-									display_result_flag = 1 ;
-									smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-									display_smoke_value(smoke_value, RED, 1);
-								}
-                break ;
-
-            default:
-                break ;
-        }
-    }
+		int smoke_value = 0 ;
+		/*如果当前在测试页面 && 开始检测标志为1，则进入传感器数据处理*/
+		if(Flow_Cursor.flow_cursor == TEST_PAGE && Sensor_Flow_Cursor.Start_Detect == 1)
+		{
+			smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+			Sensor_Handler(Sensor_Flow_Cursor.Detect_Step,smoke_value);
+		}
 }
 
 
@@ -278,7 +161,7 @@ int main(void)
     timer_start(&DataTime_Timer);
     /*按键扫描*/
     timer_init(&Key_Timer, Key_CallBack, 1, 1);
-    timer_start(&Key_Timer);
+		timer_start(&Key_Timer);
     /*100ms检测一次烟感值*/
     timer_init(&Test_Timer, Test_CallBack, 100, 100);
     timer_start(&Test_Timer);

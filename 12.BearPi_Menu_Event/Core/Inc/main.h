@@ -45,6 +45,7 @@ extern "C" {
 
 #include "menu.h"
 #include "menu_ui.h"
+#include "sensor_frame.h"
 
 #include "logic.h"
 #include "test_ui.h"

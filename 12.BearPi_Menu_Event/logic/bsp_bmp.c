@@ -27,7 +27,7 @@
 /* 如果不需要打印bmp相关的提示信息,将printf注释掉即可
  * 如要用printf()，需将串口驱动文件包含进来
  */
-#define BMP_DEBUG_PRINTF(FORMAT,...)  printf(FORMAT,##__VA_ARGS__)	
+#define BMP_DEBUG_PRINTF(FORMAT,...)  //printf(FORMAT,##__VA_ARGS__)	
 
 /* 私有变量 ------------------------------------------------------------------*/
 uint8_t pColorData[960];					/* 一行真彩色数据缓存 320 * 3 = 960 */

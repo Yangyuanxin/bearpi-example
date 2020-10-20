@@ -71,18 +71,21 @@ void timer1_callback()
 /* USER CODE BEGIN 0 */
 void button_callback(void *event)
 {
-	uint8_t button_event = get_button_event(&button) ;
-	switch(button_event)
-	{
-		case SINGLE_CLICK:
-			 Set_Event_Code(&menu, ENTER_KEY_SHORT);
-			 break ;
-		case LONG_RRESS_START:
-			 Set_Event_Code(&menu, ENTER_KEY_LONG);
-			 break ;
-		default:
-			 break ;
-	}
+    uint8_t button_event = get_button_event(&button) ;
+
+    switch(button_event)
+    {
+        case SINGLE_CLICK:
+            Set_Event_Code(&menu, ENTER_KEY_SHORT);
+            break ;
+
+        case LONG_RRESS_START:
+            Set_Event_Code(&menu, ENTER_KEY_LONG);
+            break ;
+
+        default:
+            break ;
+    }
 }
 
 void main_page_process(uint8_t Event_Code)
@@ -118,18 +121,21 @@ void log_page_process(uint8_t Event_Code)
 /*菜单处理*/
 void Menu_Handler(struct Menu *handle)
 {
-	switch(handle->Current_Page)
-	{
-		case 0:
-			main_page_process(handle->KeyEvent);
-			break ;
-		case 1:
-			log_page_process(handle->KeyEvent);
-			break ;
-		default:
-			break ;
-	}
-	/*及时将事件清除，防止重复触发*/
+    switch(handle->Current_Page)
+    {
+        case 0:
+            main_page_process(handle->KeyEvent);
+            break ;
+
+        case 1:
+            log_page_process(handle->KeyEvent);
+            break ;
+
+        default:
+            break ;
+    }
+
+    /*及时将事件清除，防止重复触发*/
     Set_Event_Code(handle, NULL_KEY_EVENT);
 }
 /* USER CODE END 0 */
@@ -164,19 +170,19 @@ int main(void)
     MX_GPIO_Init();
     MX_USART1_UART_Init();
     /* USER CODE BEGIN 2 */
-	/*1.初始化multi_timer*/
+    /*1.初始化multi_timer*/
     timer_init(&timer, timer1_callback, 5, 5);
     timer_start(&timer);
-	/*2.初始化multi_button并注册button event*/
-	button_init(&button, read_button_pin_status, 0);
+    /*2.初始化multi_button并注册button event*/
+    button_init(&button, read_button_pin_status, 0);
     button_attach(&button, SINGLE_CLICK, button_callback);
     button_attach(&button, LONG_RRESS_START, button_callback);
     button_start(&button);
     /*3.初始化菜单并注册当前菜单项及触发事件*/
     menu_init(&menu, MAIN_PAGE, NULL_KEY_EVENT);
-    printf("当前页面：%d  当前事件值:%d\n", (&menu)->Current_Page,(&menu)->KeyEvent);
-	
-	 
+    printf("当前页面：%d  当前事件值:%d\n", (&menu)->Current_Page, (&menu)->KeyEvent);
+
+
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -233,7 +239,140 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void Test_CallBack(void)
+{
 
+    static uint8_t Count_AMI = 0;
+    static uint8_t Refresh_flag = 0 ;
+    int smoke_value = 0 ;
+    static uint8_t display_result_flag = 0 ;
+
+    if(Flow_Cursor.flow_cursor == TEST_PAGE && detect_logic.Start_Detect == 1)
+    {
+        switch(detect_logic.Detect_Step)
+        {
+            case BASE_LINE:
+                Count_AMI++ ;
+
+                if(Count_AMI > 2)
+                    Count_AMI = 0 ;
+
+                icon_reflash(Count_AMI);
+                smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+
+                if(smoke_value < ALARM_THRESHOLD / 2)
+                {
+                    display_smoke_value(smoke_value, GREEN, 1);
+                    ++detect_logic.Count_Base ;
+                }
+                else
+                {
+                    display_smoke_value(smoke_value, RED, 1);
+                }
+
+                if(detect_logic.Count_Base > 10)
+                {
+                    detect_logic.Count_Base = 0 ;
+                    display_result_flag = 0 ;
+                    /*隐藏基准*/
+                    display_base(0);
+                    /*显示检测*/
+                    display_detect(1);
+                    /*显示进度条框*/
+                    Display_Process_Bar_Frame(1);
+                    /*切换到检测中*/
+                    detect_logic.Detect_Step = DETECTING ;
+                    break ;
+                }
+
+                break ;
+
+            case DETECTING:
+                Count_AMI++ ;
+
+                if(Count_AMI > 2)
+                    Count_AMI = 0 ;
+
+                icon_reflash(Count_AMI);
+                ++detect_logic.Test_Process ;
+
+                /*测试安全*/
+                if(detect_logic.Test_Process == 100 && mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
+                {
+                    detect_logic.Detect_Step = DETECT_SAFETY ;
+                    Display_Process_Bar(0, 0);
+                    display_smoke_value(smoke_value, BLACK, 0);
+                    /*隐藏检测*/
+                    display_detect(0);
+                    /*显示安全*/
+                    display_safety(1);
+                    break ;
+                }
+                else
+                {
+                    smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+
+                    if(mq2_sensor_interface.Smoke_Value < ALARM_THRESHOLD)
+                    {
+                        display_smoke_value(smoke_value, GREEN, 1);
+                    }
+                    else
+                    {
+                        display_smoke_value(smoke_value, RED, 1);
+                        detect_logic.Count_Alarm++ ;
+
+                        if(detect_logic.Count_Alarm > 5)
+                        {
+                            detect_logic.Detect_Step = DETECT_DANGER ;
+                            detect_logic.Count_Alarm = 0 ;
+                            display_smoke_value(smoke_value, BLACK, 0);
+                            Display_Process_Bar(0, 0);
+                            /*隐藏检测*/
+                            display_detect(0);
+                            /*显示危险*/
+                            display_danger(1);
+                            break ;
+                        }
+                    }
+
+                    Display_Process_Bar(detect_logic.Test_Process, 1);
+                }
+
+                break ;
+
+            case DETECT_SAFETY:
+                detect_logic.Start_Detect = 0 ;
+
+                if(display_result_flag == 0)
+                {
+                    display_result_flag = 1 ;
+                    smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+                    display_smoke_value(smoke_value, GREEN, 1);
+                }
+
+                break ;
+
+            case DETECT_DANGER:
+                /*危险闪烁*/
+                Refresh_flag = !Refresh_flag ;
+                display_danger(Refresh_flag);
+                mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_flag);
+                mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_flag);
+
+                if(display_result_flag == 0)
+                {
+                    display_result_flag = 1 ;
+                    smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
+                    display_smoke_value(smoke_value, RED, 1);
+                }
+
+                break ;
+
+            default:
+                break ;
+        }
+    }
+}
 /* USER CODE END 4 */
 
 /**

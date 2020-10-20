@@ -1,7 +1,6 @@
 #include "test_ui.h"
 #include "bsp_bmp.h"
 
-Detect_Logic detect_logic ;
 
 /*基准图标*/
 #define B0_LOGO "0:/UI/detect_page/b0.bmp"
@@ -27,7 +26,7 @@ Detect_Logic detect_logic ;
 //刷新动画
 void icon_reflash(uint8_t status)
 {
-    if(detect_logic.Detect_Step == BASE_LINE)
+    if(Sensor_Flow_Cursor.Detect_Step == BASE_LINE)
     {
         switch(status)
         {
@@ -47,7 +46,7 @@ void icon_reflash(uint8_t status)
                 break ;
         }
     }
-    else if(detect_logic.Detect_Step == DETECTING)
+    else if(Sensor_Flow_Cursor.Detect_Step == DETECTING)
     {
         switch(status)
         {
@@ -180,11 +179,8 @@ void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable)
 void test_page_init(void)
 {
     Flow_Cursor.flow_cursor = TEST_PAGE ;
-    detect_logic.Test_Process = 0 ;
-    detect_logic.Start_Detect = 1 ;
-    /*检测状态设置为基准*/
-    detect_logic.Detect_Step = BASE_LINE ;
-    detect_logic.Count_Base = 0 ;
+		/*传感器检测流程初始化*/
+		Sensor_Detect_Init();
     /*显示基准*/
     display_base(1);
     display_smoke_value(0, GREEN, 1);
@@ -198,28 +194,25 @@ void test_page_process(uint8_t Event_Code)
     {
         /*重新开始测试*/
         case LEFT:
-            detect_logic.Detect_Step = BASE_LINE ;
+						/*传感器检测流程初始化*/
+						Sensor_Detect_Init();	
             mq2_sensor_interface.led_control(&mq2_sensor_interface, 0);
             mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
-            detect_logic.Count_Alarm = 0 ;
-            detect_logic.Test_Process = 0 ;
-            detect_logic.Start_Detect = 1 ;
             Display_Process_Bar(0, 0);
             display_smoke_value(0, BLACK, 0);
 						LCD_Fill(94, 130, 94 + 48, 130 + 24, BLACK);
-            detect_logic.Count_Base = 0 ;
             /*显示基准*/
             display_base(1);
             break ;
 
         /*直接跳转到安全*/
         case LEFT_LONG:
-            detect_logic.Detect_Step = DETECT_SAFETY ;
+            Sensor_Flow_Cursor.Detect_Step = DETECT_SAFETY ;
             mq2_sensor_interface.led_control(&mq2_sensor_interface, 0);
             mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
-            detect_logic.Count_Alarm = 0 ;
-            detect_logic.Test_Process = 0 ;
-            detect_logic.Start_Detect = 0 ;
+            Sensor_Flow_Cursor.Count_Alarm = 0 ;
+            Sensor_Flow_Cursor.Test_Process = 0 ;
+            Sensor_Flow_Cursor.Start_Detect = 0 ;
             Display_Process_Bar(0, 0);
             display_smoke_value(0, BLACK, 0);
             LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
@@ -229,12 +222,12 @@ void test_page_process(uint8_t Event_Code)
 
         /*退出*/
         case RIGHT:
-            detect_logic.Detect_Step = NULL_STATUS ;
+            Sensor_Flow_Cursor.Detect_Step = NULL_STATUS ;
             mq2_sensor_interface.led_control(&mq2_sensor_interface, 0);
             mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
-            detect_logic.Count_Alarm = 0 ;
-            detect_logic.Test_Process = 0 ;
-            detect_logic.Start_Detect = 0 ;
+            Sensor_Flow_Cursor.Count_Alarm = 0 ;
+            Sensor_Flow_Cursor.Test_Process = 0 ;
+            Sensor_Flow_Cursor.Start_Detect = 0 ;
             LCD_Fill(73, 92, 73 + 48 + 48, 92 + 48, BLACK);
             LCD_Fill(DETECT_LOGO_X, DETECT_LOGO_Y, DETECT_LOGO_X + 84, DETECT_LOGO_Y + 84, BLACK);
             LCD_DisplayOff();

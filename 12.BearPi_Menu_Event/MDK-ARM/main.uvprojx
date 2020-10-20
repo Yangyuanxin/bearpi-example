@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32L431xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;        ../Drivers/STM32L4xx_HAL_Driver/Inc;        ../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;        ../Drivers/CMSIS/Device/ST/STM32L4xx/Include;        ../Drivers/CMSIS/Include;        ..\hardware\Key;        ..\hardware\LCD-SPI;        ..\hardware\MultTimer;        ..\famework;        ..\ui_handler;        ..\logic;  ../FATFS/Target;  ../FATFS/App;  ../Middlewares/Third_Party/FatFs/src</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc;../Drivers/STM32L4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../Drivers/CMSIS/Include;..\hardware\Key;..\hardware\LCD-SPI;..\hardware\MultTimer;..\famework;..\ui_handler;..\logic;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;..\famework\sensor</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -632,6 +632,11 @@
               <FileType>1</FileType>
               <FilePath>..\famework\menu_ui.c</FilePath>
             </File>
+            <File>
+              <FileName>sensor_frame.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\famework\sensor\sensor_frame.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -641,6 +646,11 @@
               <FileName>test_ui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ui_handler\test_ui.c</FilePath>
+            </File>
+            <File>
+              <FileName>conf_ui.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\ui_handler\conf_ui.c</FilePath>
             </File>
             <File>
               <FileName>main_ui.c</FileName>
@@ -656,11 +666,6 @@
               <FileName>version_info_ui.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\ui_handler\version_info_ui.c</FilePath>
-            </File>
-            <File>
-              <FileName>conf_ui.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\ui_handler\conf_ui.c</FilePath>
             </File>
           </Files>
         </Group>
