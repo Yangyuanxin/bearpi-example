@@ -1,0 +1,42 @@
+#ifndef __TEST_UI_H
+#define  __TEST_UI_H
+#include "main.h"
+
+#define DETECT_LOGO_X 76
+#define DETECT_LOGO_Y	40
+
+//检测状态机
+#define BASE_LINE 0
+#define DETECTING 1
+#define DETECT_SAFETY 2
+#define DETECT_DANGER 3
+#define NULL_STATUS   99
+
+/*报警阈值*/
+#define ALARM_THRESHOLD 600 //600ppm
+
+
+/*测试页面初始化*/
+void test_page_init(void);
+/*测试页面事件处理*/
+void test_page_process(uint8_t Event_Code);
+/*显示1隐藏0进度条框*/
+void Display_Process_Bar_Frame(int enable);
+/*显示1隐藏0进度条*/
+void Display_Process_Bar(int Process, int enable);
+/*显示烟感值*/
+void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable);
+
+/*显示基准1隐藏0*/
+void display_base(uint8_t enable);
+/*显示检测1隐藏0*/
+void display_detect(uint8_t enable);
+/*显示安全1隐藏0*/
+void display_safety(uint8_t enable);
+/*显示危险1隐藏0*/
+void display_danger(uint8_t enable);
+//刷新动画
+void icon_reflash(uint8_t status);
+
+#endif //__TEST_UI_H
+
