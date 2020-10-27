@@ -5,7 +5,7 @@
 Sensor *MQ2_Sensor = NULL;
 int get_led_status(Sensor *sensor_handle);
 int get_buzzer_status(Sensor *sensor_handle);
-int get_smoke_value(Sensor *sensor_handle);
+void get_smoke_value(Sensor *sensor_handle);
 void alarm_led_control(Sensor *sensor_handle, uint8_t status);
 void alarm_buzzer_control(Sensor *sensor_handle, uint8_t status);
 
@@ -101,12 +101,11 @@ int get_buzzer_status(Sensor *sensor_handle)
     return sensor_handle->Alarm_Buzzer_Status ;
 }
 
-int get_smoke_value(Sensor *sensor_handle)
+void get_smoke_value(Sensor *sensor_handle)
 {
     HAL_ADC_Start(&hadc1);
     HAL_ADC_PollForConversion(&hadc1, 50);
     sensor_handle->Smoke_Value = HAL_ADC_GetValue(&hadc1);
-    return sensor_handle->Smoke_Value ;
 }
 
 

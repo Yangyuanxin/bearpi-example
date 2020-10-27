@@ -1,13 +1,9 @@
 #include "main_ui.h"
 #include "bsp_bmp.h"
 
-//待机
-#define ITEM_STANDBY_X		 			0
+/*长按左键待机*/
+#define ITEM_STANDBY_X		 			20
 #define ITEM_STANDBY_Y		 			208
-
-//菜单
-#define ITEM_MENU_X		 		 		176
-#define ITEM_MENU_Y		 		 		208
 
 #define LOGO_X	55
 #define LOGO_Y 	55
@@ -23,27 +19,19 @@ uint8_t main_item = 0 ;
 Item Main_Item[] =
 {
     /*隐藏*/
-    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "待机", BLACK, BLACK, 32, 1},		//0
-    {ITEM_MENU_X, ITEM_MENU_Y, 			 "菜单", BLACK, BLACK, 32, 1},								//1
+    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "长按左键待机", BLACK, BLACK, 32, 1},		//0
     /*显示*/
-    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "待机", WHITE, BLACK, 32, 1},		//2
-    {ITEM_MENU_X, ITEM_MENU_Y, 			 "菜单", WHITE, BLACK, 32, 1},								//3
+    {ITEM_STANDBY_X, ITEM_STANDBY_Y, "长按左键待机", WHITE, BLACK, 32, 1},		//1
 };
 
 
 /*底部菜单栏显示*/
 void	main_menu_item_display(uint8_t enable)
 {
-		if(enable == 1)
-		{
-			for(int i = 2 ; i < 4 ; i++)
-          display_menu_item(Main_Item, i);
-		}
-		else if(enable == 0)
-		{
-			for(int i = 0 ; i < 2 ; i++)
-            display_menu_item(Main_Item, i);
-		}
+    if(enable == 1)
+       display_menu_item(Main_Item,1);
+    else if(enable == 0)
+       display_menu_item(Main_Item,0);
 }
 
 /*显示主页面*/
@@ -55,7 +43,7 @@ void display_main_page(uint8_t enable)
     }
     else if(enable == 0)
     {
-				LCD_Fill(LOGO_X,LOGO_Y,LOGO_X+128,LOGO_Y+128,BLACK);
+        LCD_Fill(LOGO_X, LOGO_Y, LOGO_X + 128, LOGO_Y + 128, BLACK);
         main_menu_item_display(0);
     }
 }
@@ -68,7 +56,6 @@ void main_page_init(void)
     Flow_Cursor.flow_cursor = MAIN_PAGE ;
     //关LCD显示
     LCD_DisplayOff();
-    LCD_Draw_ColorRect(0, 35, 239, 200, WHITE);
     //显示时钟
     Get_Date_Time();
     sprintf(DateTime_Handler_Info.DisPlay_DateBuf, "%04d-%02d-%02d %02d:%02d:%02d", \
@@ -87,19 +74,22 @@ void main_page_init(void)
 //选择菜单项
 void Select_Main_Menu_Item(uint8_t item)
 {
-		LCD_Fill(LOGO_X,LOGO_Y,LOGO_X+128,LOGO_Y+128,BLACK);
+    LCD_Fill(LOGO_X, LOGO_Y, LOGO_X + 128, LOGO_Y + 128, BLACK);
+
     switch(item)
     {
         case 0:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,DETECT_LOGO);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, DETECT_LOGO);
             break ;
 
         case 1:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,LOG_LOGO);
+			display_smoke_value(0, BLACK, 0);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, LOG_LOGO);
             break ;
 
         case 2:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,CONF_LOGO);
+			display_smoke_value(0, BLACK, 0);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, CONF_LOGO);
             break ;
 
         default :
@@ -130,7 +120,7 @@ void Select_Main_Menu(uint8_t Event_Code)
 
                 case 2:
                     display_main_page(0);
-                    Version_Info_Page_Init();
+					conf_page_ui_init(0);
                     break ;
 
                 default:
@@ -161,14 +151,6 @@ void main_page_process(uint8_t Event_Code)
 
         case LEFT_LONG:
             sleep_page_init();
-            break ;
-
-				/*长按右键*/
-        case RIGHT_LONG:
-						LCD_DisplayOff();
-						display_main_page(0);
-						conf_page_ui_init();
-						LCD_DisplayOn();
             break ;
 
         default:

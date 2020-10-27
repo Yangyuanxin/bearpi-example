@@ -94,13 +94,10 @@ void DataTime_Timer_CallBack(void)
 /*测试回调*/
 void Test_CallBack(void)
 {
-		int smoke_value = 0 ;
-		/*如果当前在测试页面 && 开始检测标志为1，则进入传感器数据处理*/
-		if(Flow_Cursor.flow_cursor == TEST_PAGE && Sensor_Flow_Cursor.Start_Detect == 1)
-		{
-			smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-			Sensor_Handler(Sensor_Flow_Cursor.Detect_Step,smoke_value);
-		}
+    /*如果当前在测试页面 && 开始检测标志为1，则进入传感器数据处理*/
+    if(Flow_Cursor.flow_cursor == TEST_PAGE && Sensor_Flow_Cursor.Start_Detect == 1)
+        Sensor_Handler(Sensor_Flow_Cursor.Detect_Step,	\
+                       mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) );
 }
 
 
@@ -146,22 +143,24 @@ int main(void)
     MX_FATFS_Init();
     /* USER CODE BEGIN 2 */
     PowerOn();
-		printf("小熊派气体传感器系统\n");
+    printf("小熊派气体传感器系统\n");
     LCD_Init();
-		//在串行FLASH挂载文件系统，文件系统挂载时会对串行FLASH初始化
+    //在串行FLASH挂载文件系统，文件系统挂载时会对串行FLASH初始化
     f_res = f_mount(&fs, (TCHAR const*)SDPath, 1);
+
     if(f_res == FR_OK)
-      printf("》SD卡文件系统挂载成功\n");
-		Lcd_show_bmp(0,0,START_LOGO);
-		LCD_DisplayOn();
-		HAL_Delay(3000);
+        printf("》SD卡文件系统挂载成功\n");
+
+    Lcd_show_bmp(0, 0, START_LOGO);
+    LCD_DisplayOn();
+    HAL_Delay(3000);
     Sensor_Register(&mq2_sensor_interface);
     /*注册并启动时钟显示定时器  1000ms一次*/
     timer_init(&DataTime_Timer, DataTime_Timer_CallBack, TIMER_TIMEOUT, TIMER_TIMEOUT);
     timer_start(&DataTime_Timer);
     /*按键扫描*/
     timer_init(&Key_Timer, Key_CallBack, 1, 1);
-		timer_start(&Key_Timer);
+    timer_start(&Key_Timer);
     /*100ms检测一次烟感值*/
     timer_init(&Test_Timer, Test_CallBack, 100, 100);
     timer_start(&Test_Timer);

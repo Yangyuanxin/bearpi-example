@@ -53,8 +53,8 @@
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
-          <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <DebugInformation>0</DebugInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath></ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -608,6 +608,11 @@
               <FilePath>..\hardware\Key\key.c</FilePath>
             </File>
             <File>
+              <FileName>font.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\hardware\LCD-SPI\font.h</FilePath>
+            </File>
+            <File>
               <FileName>lcd_spi2_drv.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\hardware\LCD-SPI\lcd_spi2_drv.c</FilePath>
@@ -667,6 +672,11 @@
         <Group>
           <GroupName>app_logic</GroupName>
           <Files>
+            <File>
+              <FileName>para.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\logic\para.c</FilePath>
+            </File>
             <File>
               <FileName>logic.c</FileName>
               <FileType>1</FileType>

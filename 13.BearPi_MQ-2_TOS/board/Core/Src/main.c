@@ -50,11 +50,6 @@ osThreadDef(default_task, osPriorityLow, 1, DEFULT_TASK_SIZE);
 void StartKeyTask(void  *argument);
 osThreadDef(StartKeyTask, osPriorityRealtime, 1, KEY_TASK_SIZE);
 
-/*传感器处理*/
-void StartSensorTask(void *argument);
-#define SENSOR_TASK_SIZE				400
-osThreadDef(StartSensorTask, osPriorityHigh, 1, SENSOR_TASK_SIZE);
-
 /*状态栏任务处理*/
 #define STATUS_BAR_TASK_SIZE			400
 void StartStatus_Bar_Task(void  *argument);
@@ -138,8 +133,8 @@ int main(void)
     Menu_Init();
     //关指示灯
     HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_RESET);
-		
-		/*初始化腾讯OS tiny内核*/
+
+    /*初始化腾讯OS tiny内核*/
     osKernelInitialize();
     /*创建并启动一个默认任务*/
     osThreadCreate(osThread(default_task), NULL);
@@ -235,49 +230,41 @@ void SystemClock_Config(void)
 /*默认任务处理*/
 void default_task(void *pdata)
 {
-		tos_knl_sched_lock();
-    /*创建传感器任务*/
-    osThreadCreate(osThread(StartSensorTask), NULL);
+    tos_knl_sched_lock();
     /*创建按键任务*/
     osThreadCreate(osThread(StartKeyTask), NULL);
     /*创建状态栏任务*/
     osThreadCreate(osThread(StartStatus_Bar_Task), NULL);
-		tos_knl_sched_unlock();
+    tos_knl_sched_unlock();
 }
 
 /*按键任务处理*/
 void StartKeyTask(void *argument)
 {
+	int Count_Timer = 0 ;
     __IO uint8_t KeyCode = 255;
-
     while(1)
     {
         /*获取键值*/
         GetKey(&KeyCode);
-
         if(255 != KeyCode)
         {
             Menu_Select_Item(Flow_Cursor.flow_cursor, KeyCode);
             KeyCode = 255 ;
         }
-
+		/*如果当前在测试页面 && 开始检测标志为1，则进入传感器数据处理*/
+        if(Flow_Cursor.flow_cursor == TEST_PAGE && Sensor_Flow_Cursor.Start_Detect == 1)
+        {
+			++Count_Timer ;
+			if(Count_Timer == 20)
+			{
+				Count_Timer = 0 ;
+				mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface);
+				display_smoke_value(mq2_sensor_interface.Smoke_Value, GREEN, 1);
+				Sensor_Handler(Sensor_Flow_Cursor.Detect_Step,mq2_sensor_interface.Smoke_Value);
+			}
+        }
         tos_sleep_ms(5);
-    }
-}
-
-/*传感器任务处理*/
-void StartSensorTask(void *argument)
-{
-    int smoke_value = 0 ;
-    while(1)
-    {
-					/*如果当前在测试页面 && 开始检测标志为1，则进入传感器数据处理*/
-					if(Flow_Cursor.flow_cursor == TEST_PAGE && Sensor_Flow_Cursor.Start_Detect == 1)
-					{
-							smoke_value = mq2_sensor_interface.get_smoke_value(&mq2_sensor_interface) ;
-							Sensor_Handler(Sensor_Flow_Cursor.Detect_Step, smoke_value);
-					}
-					tos_sleep_ms(100);
     }
 }
 
@@ -292,7 +279,7 @@ void StartStatus_Bar_Task(void *argument)
                 DateTime_Handler_Info.hour, DateTime_Handler_Info.minute, DateTime_Handler_Info.sec
                );
         LCD_ShowCharStr(0, 5, 240, DateTime_Handler_Info.DisPlay_DateBuf, BLACK, WHITE, 24);
-				tos_sleep_ms(1000);
+        tos_sleep_ms(1000);
     }
 }
 /* USER CODE END 4 */

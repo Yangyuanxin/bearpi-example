@@ -1,39 +1,63 @@
 #include "version_info_ui.h"
 
-#define VERSION1_TEXT_START_X 5
-#define VERSION1_TEXT_START_Y 40
-#define VERSION1_TEXT_FONT    16
+/*封装类型*/
+typedef struct
+{
+    uint32_t value ;
+    char     *Name ;
+} Type ;
 
-#define VERSION2_TEXT_START_X 5
-#define VERSION2_TEXT_START_Y 56
-#define VERSION2_TEXT_FONT    16
-
-#define VERSION3_TEXT_START_X 5
-#define VERSION3_TEXT_START_Y 72
-#define VERSION3_TEXT_FONT    16
-
-#define INFO_1	"STM32L431 ROM:256K RAM:64K"
-#define INFO_2	"AUTHOR:Bruce.yang"
-#define INFO_3	"BearPi_Menu_Demo_20201012"
+Type Package_Type[] =
+{
+    {0x00000, "LQFP64"},
+    {0x00001, "WLCSP64"},
+    {0x00010, "LQFP100"},
+    {0x00101, "WLCSP36"},
+    {0x01000, "UFQFPN32"},
+    {0x01001, "LQFP32"},
+    {0x01010, "UFQFPN48"},
+    {0x01011, "LQFP48"},
+    {0x01100, "WLCSP49"},
+    {0x01101, "UFBGA64"},
+    {0x01110, "UFBGA100"},
+    {0x01111, "WLCSP36 with external SMPS"},
+    {0x10110, "LQFP64 with external SMPS"},
+};
 
 //显示1隐藏0版本信息
 void display_version_info(int enable)
 {
-    char *info_1 = INFO_1;
-    char *info_2 = INFO_2;
-    char *info_3 = INFO_3;
+    char id[50] = {0};
+    char flash_size[20] = {0};
+    char Mcu_Package[20] = {0};
+    uint32_t Type_Value = 0 ;
+    sprintf(id, "id:0x%x %x %x", \
+            * (__IO uint32_t *)0x1FFF7590, \
+            * (__IO uint32_t *)0x1FFF7590 + 0x04, \
+            * (__IO uint32_t *)0x1FFF7590 + 0x08);
+    sprintf(flash_size, "flash_size:%dKB", *(__IO uint16_t *)0x1FFF75E0);
+    Type_Value = *(__IO uint32_t *)0x1FFF7500 & 0x1f ;
+
+    for(int i = 0 ; i < sizeof(Package_Type) / sizeof(Package_Type[0]); i++)
+    {
+        if(Type_Value == Package_Type[i].value)
+        {
+            sprintf(Mcu_Package, "Mcu_Package:%s", Package_Type[i].Name);
+            break ;
+        }
+    }
 
     if(enable == 1)
     {
-        LCD_ShowCharStr(VERSION1_TEXT_START_X, VERSION1_TEXT_START_Y, 240, info_1, BLACK, RED, VERSION1_TEXT_FONT);
-        LCD_ShowCharStr(VERSION2_TEXT_START_X, VERSION2_TEXT_START_Y, 240, info_2, BLACK, RED, VERSION2_TEXT_FONT);
-        LCD_ShowCharStr(VERSION3_TEXT_START_X, VERSION3_TEXT_START_Y, 240, info_3, BLACK, RED, VERSION3_TEXT_FONT);
+        LCD_ShowCharStr(VERSION1_TEXT_START_X, VERSION1_TEXT_START_Y, 240, id, BLACK, RED, VERSION1_TEXT_FONT);
+        LCD_ShowCharStr(VERSION2_TEXT_START_X, VERSION2_TEXT_START_Y, 240, flash_size, BLACK, RED, VERSION2_TEXT_FONT);
+        LCD_ShowCharStr(VERSION3_TEXT_START_X, VERSION3_TEXT_START_Y, 240, Mcu_Package, BLACK, RED, VERSION3_TEXT_FONT);
     }
     else if(enable == 0)
     {
-        LCD_ShowCharStr(VERSION1_TEXT_START_X, VERSION1_TEXT_START_Y, 240, info_1, BLACK, BLACK, VERSION1_TEXT_FONT);
-        LCD_ShowCharStr(VERSION2_TEXT_START_X, VERSION2_TEXT_START_Y, 240, info_2, BLACK, BLACK, VERSION2_TEXT_FONT);
-        LCD_ShowCharStr(VERSION3_TEXT_START_X, VERSION3_TEXT_START_Y, 240, info_3, BLACK, BLACK, VERSION3_TEXT_FONT);
+        LCD_ShowCharStr(VERSION1_TEXT_START_X, VERSION1_TEXT_START_Y, 240, id, BLACK, BLACK, VERSION1_TEXT_FONT);
+        LCD_ShowCharStr(VERSION2_TEXT_START_X, VERSION2_TEXT_START_Y, 240, flash_size, BLACK, BLACK, VERSION2_TEXT_FONT);
+        LCD_ShowCharStr(VERSION3_TEXT_START_X, VERSION3_TEXT_START_Y, 240, Mcu_Package, BLACK, BLACK, VERSION3_TEXT_FONT);
     }
 }
 
@@ -42,7 +66,6 @@ void Version_Info_Page_Init(void)
 {
     Flow_Cursor.flow_cursor = VERSION_PAGE ;
     display_version_info(1);
-    LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", GREEN, BLACK, 32, 1);
 }
 
 //版本信息按键操作
@@ -51,17 +74,9 @@ void version_info_page_process(uint8_t KeyValue)
     switch(KeyValue)
     {
         case LEFT:
-            break ;
-
         case RIGHT:
-            break ;
-
-        case RIGHT_LONG:
-						LCD_DisplayOff();
             display_version_info(0);
-            Flow_Cursor.flow_cursor = CONF_PAGE ;
-						conf_page_ui_init();
-						LCD_DisplayOn();
+            conf_page_ui_init(3);
             break ;
 
         default:

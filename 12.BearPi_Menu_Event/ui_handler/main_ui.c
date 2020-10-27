@@ -34,16 +34,16 @@ Item Main_Item[] =
 /*底部菜单栏显示*/
 void	main_menu_item_display(uint8_t enable)
 {
-		if(enable == 1)
-		{
-			for(int i = 2 ; i < 4 ; i++)
-          display_menu_item(Main_Item, i);
-		}
-		else if(enable == 0)
-		{
-			for(int i = 0 ; i < 2 ; i++)
+    if(enable == 1)
+    {
+        for(int i = 2 ; i < 4 ; i++)
             display_menu_item(Main_Item, i);
-		}
+    }
+    else if(enable == 0)
+    {
+        for(int i = 0 ; i < 2 ; i++)
+            display_menu_item(Main_Item, i);
+    }
 }
 
 /*显示主页面*/
@@ -55,7 +55,7 @@ void display_main_page(uint8_t enable)
     }
     else if(enable == 0)
     {
-				LCD_Fill(LOGO_X,LOGO_Y,LOGO_X+128,LOGO_Y+128,BLACK);
+        LCD_Fill(LOGO_X, LOGO_Y, LOGO_X + 128, LOGO_Y + 128, BLACK);
         main_menu_item_display(0);
     }
 }
@@ -87,19 +87,20 @@ void main_page_init(void)
 //选择菜单项
 void Select_Main_Menu_Item(uint8_t item)
 {
-		LCD_Fill(LOGO_X,LOGO_Y,LOGO_X+128,LOGO_Y+128,BLACK);
+    LCD_Fill(LOGO_X, LOGO_Y, LOGO_X + 128, LOGO_Y + 128, BLACK);
+
     switch(item)
     {
         case 0:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,DETECT_LOGO);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, DETECT_LOGO);
             break ;
 
         case 1:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,LOG_LOGO);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, LOG_LOGO);
             break ;
 
         case 2:
-						Lcd_show_bmp(LOGO_X,LOGO_Y,CONF_LOGO);
+            Lcd_show_bmp(LOGO_X, LOGO_Y, CONF_LOGO);
             break ;
 
         default :
@@ -163,12 +164,12 @@ void main_page_process(uint8_t Event_Code)
             sleep_page_init();
             break ;
 
-				/*长按右键*/
+        /*长按右键*/
         case RIGHT_LONG:
-						LCD_DisplayOff();
-						display_main_page(0);
-						conf_page_ui_init();
-						LCD_DisplayOn();
+            LCD_DisplayOff();
+            display_main_page(0);
+            conf_page_ui_init();
+            LCD_DisplayOn();
             break ;
 
         default:

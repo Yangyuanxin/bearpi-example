@@ -14,7 +14,7 @@ typedef struct Sensor
     void (*led_control)(struct Sensor *sensor_handle, uint8_t status);
     void (*buzzer_control)(struct Sensor *sensor_handle, uint8_t status);
 
-    int (*get_smoke_value)(struct Sensor *sensor_handle);
+    void (*get_smoke_value)(struct Sensor *sensor_handle);
     int (*get_led_status)(struct Sensor *sensor_handle);
     int (*get_buzzer_status)(struct Sensor *sensor_handle);
 } Sensor ;

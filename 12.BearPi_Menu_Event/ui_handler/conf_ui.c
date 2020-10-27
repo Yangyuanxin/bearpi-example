@@ -46,7 +46,7 @@ Item Conf_Item_Display[] =
 };
 
 /*选择菜单项目*/
-void select_conf_item(uint8_t item,uint16_t color)
+void select_conf_item(uint8_t item, uint16_t color)
 {
     LCD_ShowCharStr(ICON_X, PARA_SETTING_Y, 24, "#", BLACK, BLACK, 24);
     LCD_ShowCharStr(ICON_X, ALARM_SETTING_Y, 24, "#", BLACK, BLACK, 24);
@@ -88,7 +88,7 @@ void conf_page_ui_init(void)
     for(int i = 0 ; i < 4 ; i++)
         display_menu_item(Conf_Item_Display, i);
 
-    select_conf_item(conf_page_ui.select_item,RED);
+    select_conf_item(conf_page_ui.select_item, RED);
 
     LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", GREEN, BLACK, 32, 1);
 }
@@ -113,9 +113,11 @@ void enter_conf_item(uint8_t item)
         //仪器信息
         case 3:
             display_menu_item(Conf_Item_Title_Display, 1);
+
             for(int i = 4 ; i < 8 ; i++)
                 display_menu_item(Conf_Item_Display, i);
-						select_conf_item(conf_page_ui.select_item,BLACK);
+
+            select_conf_item(conf_page_ui.select_item, BLACK);
             Version_Info_Page_Init();
             break ;
 
@@ -133,30 +135,30 @@ void conf_page_process(uint8_t Event_Code)
         //切换到下一项
         case LEFT:
             (conf_page_ui.select_item < 3) ? (conf_page_ui.select_item++) : (conf_page_ui.select_item = 0);
-            select_conf_item(conf_page_ui.select_item,RED);
+            select_conf_item(conf_page_ui.select_item, RED);
             break ;
 
         //进入某一项
         case RIGHT:
-						LCD_DisplayOff();
+            LCD_DisplayOff();
             enter_conf_item(conf_page_ui.select_item);
-						LCD_DisplayOn();
+            LCD_DisplayOn();
             break ;
 
         //退出菜单回到主菜单
         case RIGHT_LONG:
-						LCD_DisplayOff();
-						select_conf_item(conf_page_ui.select_item,BLACK);
+            LCD_DisplayOff();
+            select_conf_item(conf_page_ui.select_item, BLACK);
             LCD_ShowChinese(20, 208, (uint8_t *)"长按右键退出", BLACK, BLACK, 32, 1);
             display_menu_item(Conf_Item_Title_Display, 1);
 
             for(int i = 4 ; i < 8 ; i++)
                 display_menu_item(Conf_Item_Display, i);
-            
+
             Flow_Cursor.flow_cursor = MAIN_PAGE ;
             Select_Main_Menu_Item(main_item);
             main_menu_item_display(1);
-						LCD_DisplayOn();
+            LCD_DisplayOn();
             break ;
 
         default:

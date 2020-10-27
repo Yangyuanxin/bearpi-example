@@ -12,9 +12,10 @@ extern Conf_Page conf_page_ui ;
 
 
 
-void conf_page_ui_init(void);
+void conf_page_ui_init(uint8_t item);
 void conf_page_process(uint8_t Event_Code);
-
+/*选择菜单项目*/
+void select_conf_item(uint8_t item, uint16_t color);
 
 
 #endif //__CONF_UI_H
