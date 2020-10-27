@@ -45,7 +45,8 @@ extern "C" {
 
 #include "rtc.h"
 #include "key.h"
-//#include "multi_timer.h"
+#include "para.h"
+#include "filesystem.h"
 #include "lcd_spi2_drv.h"
 
 #include "menu.h"
@@ -53,11 +54,15 @@ extern "C" {
 #include "sensor_frame.h"
 
 #include "logic.h"
+#include "log_ui.h"
 #include "test_ui.h"
 #include "main_ui.h"
 #include "conf_ui.h"
+#include "debug_ui.h"
 #include "sleep_ui.h"
+#include "threshold_ui.h"
 #include "version_info_ui.h"
+#include "alarm_setting_ui.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

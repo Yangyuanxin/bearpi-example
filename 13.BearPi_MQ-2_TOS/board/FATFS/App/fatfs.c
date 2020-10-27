@@ -24,7 +24,10 @@ FATFS SDFatFS;    /* File system object for SD logical drive */
 FIL SDFile;       /* File object for SD */
 
 /* USER CODE BEGIN Variables */
-
+/*系统配置文件全局变量*/
+uint8_t retUSER_SYS_CONFIG ;
+FATFS USERFatFS_SYS_CONFIG ;
+FIL USER_SYS_CONFIG_File ;
 /* USER CODE END Variables */
 
 void MX_FATFS_Init(void)

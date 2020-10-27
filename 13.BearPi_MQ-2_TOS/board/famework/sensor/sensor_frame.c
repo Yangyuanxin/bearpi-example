@@ -90,10 +90,11 @@ void sensor_detecting_step(int adc)
     ++Sensor_Flow_Cursor.Test_Process ;
 
     /*²âÊÔ°²È«*/
-    if(Sensor_Flow_Cursor.Test_Process > 50 && adc < ALARM_THRESHOLD)
+    if(Sensor_Flow_Cursor.Test_Process > 50 && adc < User_Memory_Para.alarm_threshold[User_Memory_Para.sensivity])
     {
         Sensor_Flow_Cursor.Count_AMI = 0 ;
         Sensor_Flow_Cursor.Test_Process = 0 ;
+				Sensor_Flow_Cursor.Is_safety_or_danger = 0 ;
         Sensor_Flow_Cursor.Detect_Step = DETECT_SAFETY ;
         Display_Process_Bar(0, 0);
         display_smoke_value(adc, BLACK, 0);
@@ -122,6 +123,7 @@ void sensor_detecting_step(int adc)
                 Sensor_Flow_Cursor.Count_Alarm = 0 ;
                 Sensor_Flow_Cursor.Count_AMI = 0 ;
                 Sensor_Flow_Cursor.Test_Process = 0 ;
+								Sensor_Flow_Cursor.Is_safety_or_danger = 1 ;
                 display_smoke_value(adc, BLACK, 0);
                 Display_Process_Bar(0, 0);
                 /*Òþ²Ø¼ì²â*/
@@ -149,12 +151,10 @@ void sensor_detect_safety(int adc)
 void sensor_detect_danger(int adc)
 {
     static uint8_t Refresh_Alarm = 0 ;
-    /*Î£ÏÕÉÁË¸*/
     Refresh_Alarm = !Refresh_Alarm ;
-    display_danger(Refresh_Alarm);
     mq2_sensor_interface.led_control(&mq2_sensor_interface, Refresh_Alarm);
-    mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_Alarm);
-
+		if(User_Memory_Para.volume == 1)
+			mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, Refresh_Alarm);
     if(Sensor_Flow_Cursor.Count_AMI == 0)
     {
         Sensor_Flow_Cursor.Count_AMI = 1 ;

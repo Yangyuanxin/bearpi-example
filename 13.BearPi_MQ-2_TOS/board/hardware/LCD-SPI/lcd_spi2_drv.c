@@ -781,7 +781,6 @@ void LCD_ShowChinese(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t bc,ui
 		else if(sizey==24) LCD_ShowChinese24x24(x,y,s,fc,bc,sizey,mode);
 		else if(sizey==32) LCD_ShowChinese32x32(x,y,s,fc,bc,sizey,mode);
 		else if(sizey==48) LCD_ShowChinese48x48(x,y,s,fc,bc,sizey,mode);
-		else if(sizey==64) LCD_ShowChinese64x64(x,y,s,fc,bc,sizey,mode);
 		else return;
 		s+=2;
 		x+=sizey;
@@ -1080,63 +1079,6 @@ void LCD_ShowChinese48x48(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 }
 
 
-
-/******************************************************************************
-      函数说明：显示单个64x64汉字
-      入口数据：x,y显示坐标
-                *s 要显示的汉字
-                fc 字的颜色
-                bc 字的背景色
-                sizey 字号
-                mode:  0非叠加模式  1叠加模式
-      返回值：  无
-******************************************************************************/
-void LCD_ShowChinese64x64(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t bc,uint8_t sizey,uint8_t mode)
-{
-	uint16_t i,j,m=0;
-	uint16_t k;
-	uint16_t HZnum;//汉字数目
-	uint16_t TypefaceNum;//一个字符所占字节大小
-	uint16_t x0=x;
-	TypefaceNum=(sizey/8+((sizey%8)?1:0))*sizey;
-	HZnum=sizeof(tfont64)/sizeof(typFNT_GB64);	//统计汉字数目
-	for(k=0;k<HZnum;k++) 
-	{
-		if ((tfont64[k].Index[0]==*(s))&&(tfont64[k].Index[1]==*(s+1)))
-		{ 	
-			LCD_Address_Set(x,y,x+sizey-1,y+sizey-1);
-			for(i=0;i<TypefaceNum;i++)
-			{
-				for(j=0;j<8;j++)
-				{	
-					if(!mode)//非叠加方式
-					{
-						if(tfont64[k].Msk[i]&(0x01<<j))LCD_Write_Data(fc);
-						else LCD_Write_Data(bc);
-						m++;
-						if(m%sizey==0)
-						{
-							m=0;
-							break;
-						}
-					}
-					else//叠加方式
-					{
-						if(tfont64[k].Msk[i]&(0x01<<j))	LCD_Draw_ColorPoint(x,y,fc);//画一个点
-						x++;
-						if((x-x0)==sizey)
-						{
-							x=x0;
-							y++;
-							break;
-						}
-					}
-				}
-			}
-		}				  	
-		continue;  //查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
-	}
-}
 
 
 

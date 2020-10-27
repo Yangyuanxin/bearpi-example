@@ -39,7 +39,10 @@ extern FIL SDFile; /* File object for SD */
 void MX_FATFS_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-
+/*系统配置文件全局变量*/
+extern uint8_t retUSER_SYS_CONFIG ;
+extern FATFS USERFatFS_SYS_CONFIG ;
+extern FIL USER_SYS_CONFIG_File ;
 /* USER CODE END Prototypes */
 #ifdef __cplusplus
 }

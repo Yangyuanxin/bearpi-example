@@ -46,10 +46,11 @@ int Sensor_Register(Sensor *sensor_handle)
 void standby_mode(void)
 {
     __IO static uint8_t status = 0;
+
     switch(status)
     {
         case 0:
-			Flow_Cursor.flow_cursor = SLEEP_PAGE ;
+            Flow_Cursor.flow_cursor = SLEEP_PAGE ;
             //开指示灯
             HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_SET);
             //关屏
@@ -58,7 +59,7 @@ void standby_mode(void)
             break ;
 
         case 1:
-			Flow_Cursor.flow_cursor = MAIN_PAGE ;
+            Flow_Cursor.flow_cursor = MAIN_PAGE ;
             //关指示灯
             HAL_GPIO_WritePin(GPIOC, LED_Pin, GPIO_PIN_RESET);
             //开屏

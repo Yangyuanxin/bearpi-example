@@ -163,7 +163,7 @@ void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable)
 {
     char display_buf[20] = {0};
     memset(display_buf, 0, 20);
-    sprintf(display_buf, "%04dppm",smoke_value);
+    sprintf(display_buf, "%04dppm", smoke_value);
 
     if(enable == 1)
         LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, color, 24);
@@ -181,7 +181,6 @@ void test_page_init(void)
     /*显示基准*/
     display_base(1);
     display_smoke_value(0, GREEN, 1);
-    LCD_ShowChinese(40, 208, (uint8_t *)"按右键退出", GREEN, BLACK, 32, 1);
 }
 
 /*测试页面事件处理*/
@@ -204,14 +203,14 @@ void test_page_process(uint8_t Event_Code)
 
         /*退出*/
         case RIGHT:
-			tos_knl_sched_lock();
-			Sensor_Flow_Cursor.Start_Detect = 0 ;
-			Sensor_Flow_Cursor.Count_Alarm = 0 ;
+            tos_knl_sched_lock();
+            Sensor_Flow_Cursor.Start_Detect = 0 ;
+            Sensor_Flow_Cursor.Count_Alarm = 0 ;
             Sensor_Flow_Cursor.Test_Process = 0 ;
             Sensor_Flow_Cursor.Detect_Step = NULL_STATUS ;
             mq2_sensor_interface.led_control(&mq2_sensor_interface, 0);
             mq2_sensor_interface.buzzer_control(&mq2_sensor_interface, 0);
-			LCD_Clear(BLACK);
+            LCD_Clear(BLACK);
             Flow_Cursor.flow_cursor = MAIN_PAGE ;
             main_page_init();
             tos_knl_sched_unlock();
