@@ -28,10 +28,8 @@ typedef struct
 extern Record_Data csv_file_record ;
 
 
-/*挂载文件系统*/
-void Mount_Fatfs(void);
-/*解除文件系统挂载*/
-void UMount_Fatfs(void);
+/*挂载SD卡*/
+int Mount_SD(void);
 
 /*保存检测数据到csv文件中*/
 int save_record_to_flash(void);

@@ -5,57 +5,16 @@
 uint8_t work[_MAX_SS] ;
 Record_Data csv_file_record ;
 
-/*挂载文件系统*/
-void Mount_Fatfs(void)
+/*挂载SD卡*/
+int Mount_SD(void)
 {
+    /*挂载SD卡*/
     retSD = f_mount(&SDFatFS, SDPath, 1);
-
-    if(retSD != FR_OK)
-    {
-        if(retSD == FR_NO_FILESYSTEM)
-        {
-            DEBUG("f_mount 没有文件系统,开始格式化SD卡\r\n");
-            retSD = f_mkfs(SDPath, FM_ANY, 0, work, sizeof(work));
-
-            if(retSD != FR_OK)
-            {
-                DEBUG("f_mkfs 格式化失败，err = %d\r\n", retSD);
-            }
-            else
-            {
-                DEBUG("格式化成功，开始重新挂载spi-flash\r\n");
-                retSD = f_mount(&SDFatFS, SDPath, 1);
-
-                if(retSD != FR_OK)
-                {
-                    DEBUG("f_mount 发生错误，err = %d\r\n", retSD);
-                }
-                else
-                {
-                    DEBUG("SD卡文件系统挂载成功\r\n");
-                }
-            }
-        }
-        else
-        {
-            DEBUG("f_mount 发生其他错误，err = %d\r\n", retSD);
-        }
-    }
-    else
-        DEBUG("SD卡文件系统挂载成功\r\n");
+    if(FR_OK != retSD)
+        return -1 ;
+    return 0 ;
 }
 
-/*解除文件系统挂载*/
-void UMount_Fatfs(void)
-{
-    DEBUG("不再使用文件系统，取消挂载文件系统\r\n");
-    retSD = f_mount(NULL, SDPath, 1);
-
-    if(retSD == FR_OK)
-        DEBUG("取消挂载文件系统成功\r\n");
-    else
-        DEBUG("取消挂载文件系统失败，err = %d\r\n", retSD);
-}
 
 
 /*读取文件里的一行数据*/
@@ -143,10 +102,11 @@ int save_record_to_flash(void)
     ++User_Memory_Para.detetct_log_serial_number;
     /*记录流水号保存处理*/
     User_Detect_Log_Save_Process();
-    sprintf(Detect_Data, "%d,%2d/%02d/%02d %02d:%02d,%d\r\n",
-            User_Memory_Para.detetct_log_serial_number, DateTime_Handler_Info.year, 
-			DateTime_Handler_Info.month,DateTime_Handler_Info.day, 
-			DateTime_Handler_Info.hour, DateTime_Handler_Info.minute, Sensor_Flow_Cursor.Is_safety_or_danger);
+    sprintf(Detect_Data, "%d,%2d/%02d/%02d %02d:%02d,%d\r\n",		\
+            User_Memory_Para.detetct_log_serial_number, DateTime_Handler_Info.year, 	\
+			DateTime_Handler_Info.month,DateTime_Handler_Info.day, 						\
+			DateTime_Handler_Info.hour, DateTime_Handler_Info.minute,					\
+			Sensor_Flow_Cursor.Is_safety_or_danger);
 	retSD = f_write(&SDFile, Detect_Data, strlen((char *)Detect_Data), &count);
 	if(retSD != FR_OK)
     {

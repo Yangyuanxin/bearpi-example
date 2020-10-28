@@ -100,28 +100,35 @@ void enter_conf_item(uint8_t item)
     {
         //阈值设置
         case 0:
-						display_menu_item(Conf_Item_Title_Display, 1);
+            display_menu_item(Conf_Item_Title_Display, 1);
 
             for(int i = 4 ; i < 8 ; i++)
                 display_menu_item(Conf_Item_Display, i);
 
             select_conf_item(conf_page_ui.select_item, BLACK);
-						threshold_page_ui_init(0);
+            threshold_page_ui_init(0);
             break ;
 
         //报警设置
         case 1:
-						display_menu_item(Conf_Item_Title_Display, 1);
+            display_menu_item(Conf_Item_Title_Display, 1);
 
             for(int i = 4 ; i < 8 ; i++)
                 display_menu_item(Conf_Item_Display, i);
 
             select_conf_item(conf_page_ui.select_item, BLACK);
-						alarm_setting_page_ui_init(0);
+            alarm_setting_page_ui_init(0);
             break ;
 
         //调试模式
         case 2:
+            display_menu_item(Conf_Item_Title_Display, 1);
+
+            for(int i = 4 ; i < 8 ; i++)
+                display_menu_item(Conf_Item_Display, i);
+
+            select_conf_item(conf_page_ui.select_item, BLACK);
+            debug_page_ui_init(0);
             break ;
 
         //仪器信息

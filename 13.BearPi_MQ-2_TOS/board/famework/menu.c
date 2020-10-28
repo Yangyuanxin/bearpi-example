@@ -3,14 +3,15 @@
 /*菜单操作表定义*/
 static OP_MENU_PAGE g_opStruct[] = 
 {
-	{SLEEP_PAGE     , sleep_page_process},
-	{MAIN_PAGE      , main_page_process},	
-	{TEST_PAGE      , test_page_process},
-	{LOG_PAGE				, log_page_process},
-	{CONF_PAGE      ,	conf_page_process},
-	{THRESHOLD_PAGE , threshold_page_process},
+	{SLEEP_PAGE     , 	sleep_page_process},
+	{MAIN_PAGE      , 	main_page_process},	
+	{TEST_PAGE      , 	test_page_process},
+	{LOG_PAGE		, 	log_page_process},
+	{CONF_PAGE      , 	conf_page_process},
+	{THRESHOLD_PAGE , 	threshold_page_process},
 	{ALARM_SETTING_PAGE,alarm_setting_page_process},
-	{VERSION_PAGE   , version_info_page_process},
+	{DEBUG_PAGE		,	debug_page_process},
+	{VERSION_PAGE   , 	version_info_page_process},
 };
 
 /*跳转到表所对应的页面*/

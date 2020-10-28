@@ -2,26 +2,6 @@
 #include "bsp_bmp.h"
 
 
-/*基准图标*/
-#define B0_LOGO "0:/UI/detect_page/b0.bmp"
-#define B1_LOGO "0:/UI/detect_page/b1.bmp"
-#define B2_LOGO "0:/UI/detect_page/b2.bmp"
-
-/*检测图标*/
-#define D0_LOGO "0:/UI/detect_page/d0.bmp"
-#define D1_LOGO "0:/UI/detect_page/d1.bmp"
-#define D2_LOGO "0:/UI/detect_page/d2.bmp"
-
-/*安全图标*/
-#define R0_LOGO "0:/UI/detect_page/r0.bmp"
-/*危险图标*/
-#define R1_LOGO "0:/UI/detect_page/r1.bmp"
-
-/*烟感值显示*/
-#define SMOKE_X 74
-#define SMOKE_Y 130 + 24
-
-
 //刷新动画
 void icon_reflash(uint8_t status)
 {
@@ -164,11 +144,14 @@ void display_smoke_value(int smoke_value, uint16_t color, uint8_t enable)
     char display_buf[20] = {0};
     memset(display_buf, 0, 20);
     sprintf(display_buf, "%04dppm", smoke_value);
-
-    if(enable == 1)
-        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, color, 24);
-    else if(enable == 0)
-        LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, BLACK, 24);
+	/*当打开了调试标志才会显示烟感值*/
+	if(User_Memory_Para.debug_flag == 1)
+	{
+		if(enable == 1)
+			LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, color, 24);
+		else if(enable == 0)
+			LCD_ShowCharStr(SMOKE_X, SMOKE_Y, 100, display_buf, BLACK, BLACK, 24);
+	}
 }
 
 

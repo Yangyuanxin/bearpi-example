@@ -3,13 +3,13 @@
 #define ALARM_SETTING_X					70
 #define ALARM_SETTING_Y					43
 
-#define ALARM_STATUS1_X			105
-#define ALARM_STATUS1_Y    	112
-#define ALARM_STATUS1_FONT	24
+#define ALARM_STATUS1_X					105
+#define ALARM_STATUS1_Y    				112
+#define ALARM_STATUS1_FONT				24
 
-#define ALARM_STATUS2_X				105
-#define ALARM_STATUS2_Y     	145
-#define ALARM_STATUS2_FONT		24
+#define ALARM_STATUS2_X					105
+#define ALARM_STATUS2_Y     			145
+#define ALARM_STATUS2_FONT				24
 
 Alarm_Setting_Page alarm_setting_page_ui ;
 
@@ -120,7 +120,6 @@ void alarm_setting_page_process(uint8_t KeyValue)
             Display_alarm_setting_page_status2_font(0, BLACK);
 						/*保存报警设置参数*/
 						setting_volume(alarm_setting_page_ui.select_item);
-						User_Para_Save_Process();
             /*返回配置页面*/
 						conf_page_ui_init(1);
             break ;

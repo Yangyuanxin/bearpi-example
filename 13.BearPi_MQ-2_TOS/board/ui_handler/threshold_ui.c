@@ -155,9 +155,8 @@ void threshold_page_process(uint8_t Event_Code)
             display_menu_item(Threshold_Item_Status_Display, 1);
             display_menu_item(Threshold_Item_Status_Display, 2);
             conf_page_ui_init(0);
-						/*保存灵敏度参数*/
-						setting_sensivity(threshold_page_ui.select_item);
-						User_Para_Save_Process();
+            /*保存灵敏度参数*/
+            setting_sensivity(threshold_page_ui.select_item);
             break ;
 
         default:

@@ -19,10 +19,9 @@
 /*配置参数*/
 typedef struct
 {
-    int8_t volume ;									/*音量*/
-    int8_t sensivity;								/*灵敏度*/
-    int16_t debug_flag ;						/*调试标志*/
-    int16_t password[3];						/*设备密码*/
+    int8_t volume ;					/*音量*/
+    int8_t sensivity;				/*灵敏度*/
+    int8_t debug_flag ;				/*调试标志*/
     int detetct_log_serial_number ; /*检测记录流水号*/
     /*报警阈值参数==>与灵敏度关联*/
     int16_t alarm_threshold[3];		/*报警阈值*/

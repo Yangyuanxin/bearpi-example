@@ -12,8 +12,25 @@
 #define DETECT_DANGER 3
 #define NULL_STATUS   99
 
-/*报警阈值*/
-#define ALARM_THRESHOLD 600 //600ppm
+
+/*基准图标*/
+#define B0_LOGO "0:/UI/detect_page/b0.bmp"
+#define B1_LOGO "0:/UI/detect_page/b1.bmp"
+#define B2_LOGO "0:/UI/detect_page/b2.bmp"
+
+/*检测图标*/
+#define D0_LOGO "0:/UI/detect_page/d0.bmp"
+#define D1_LOGO "0:/UI/detect_page/d1.bmp"
+#define D2_LOGO "0:/UI/detect_page/d2.bmp"
+
+/*安全图标*/
+#define R0_LOGO "0:/UI/detect_page/r0.bmp"
+/*危险图标*/
+#define R1_LOGO "0:/UI/detect_page/r1.bmp"
+
+/*烟感值显示*/
+#define SMOKE_X 74
+#define SMOKE_Y 130 + 24
 
 
 /*测试页面初始化*/

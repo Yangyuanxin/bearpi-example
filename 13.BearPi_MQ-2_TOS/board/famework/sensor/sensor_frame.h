@@ -28,8 +28,9 @@ typedef struct
     uint8_t Start_Detect;	/*开始测试标志*/
     uint8_t Count_Base  ; /*统计基准次数*/
     uint8_t Count_Alarm ;	/*统计报警次数*/
-    uint8_t Test_Process;	/*测试进度*/
-		uint8_t Is_safety_or_danger ;/*安全/危险*/
+    uint8_t  Test_Process;	/*测试进度*/
+	uint32_t Alarm_Threshold ;	/*报警阈值*/
+	uint8_t Is_safety_or_danger ;/*安全/危险*/
 } Sensor_Cursor ;
 extern Sensor_Cursor Sensor_Flow_Cursor ;
 
