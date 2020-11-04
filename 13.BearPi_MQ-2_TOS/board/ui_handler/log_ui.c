@@ -126,7 +126,7 @@ static void display_log_detect_result(uint8_t result, uint8_t enable)
 {
     char buf[10] = {0};
     memset(buf, 0, 10);
-
+		LCD_Fill(DETECT_RESULT_X+108, DETECT_RESULT_Y, DETECT_RESULT_X+108+ 48, DETECT_RESULT_Y+24, BLACK);
     if(enable == 1)
     {
         if(result == 0)
@@ -139,9 +139,9 @@ static void display_log_detect_result(uint8_t result, uint8_t enable)
     else if(enable == 0)
     {
         LCD_ShowChinese(DETECT_RESULT_X + 108, DETECT_RESULT_Y,	\
-                        (uint8_t *)"安全", BLACK, BLACK, 24, 1);
+                        (uint8_t *)"安全", BLACK, BLACK, 24, 0);
         LCD_ShowChinese(DETECT_RESULT_X + 108, DETECT_RESULT_Y,	\
-                        (uint8_t *)"危险", BLACK, BLACK, 24, 1);
+                        (uint8_t *)"危险", BLACK, BLACK, 24, 0);
     }
 }
 

@@ -6,31 +6,31 @@
 /*给一块区域赋色接口参数*/
 typedef struct
 {
-    uint16_t x_start; 
-	uint16_t x_end	;
-	uint16_t y_start; 
-	uint16_t y_end	;
-	uint16_t color	;
+    uint16_t x_start;
+    uint16_t x_end	;
+    uint16_t y_start;
+    uint16_t y_end	;
+    uint16_t color	;
 } LCD_Fill_Para ;
 
 /*画线显示接口参数*/
 typedef struct
 {
-    uint16_t x_start; 
-	uint16_t x_end	;
-	uint16_t y_start; 
-	uint16_t y_end	;
-	uint16_t color	;
+    uint16_t x_start;
+    uint16_t x_end	;
+    uint16_t y_start;
+    uint16_t y_end	;
+    uint16_t color	;
 } LCD_Line_Show_Para ;
 
 /*画矩形显示接口参数*/
 typedef struct
 {
-    uint16_t x_start; 
-	uint16_t x_end	;
-	uint16_t y_start; 
-	uint16_t y_end	;
-	uint16_t color	;
+    uint16_t x_start;
+    uint16_t x_end	;
+    uint16_t y_start;
+    uint16_t y_end	;
+    uint16_t color	;
 } LCD_Rect_Show_Para ;
 
 /*ASCII字符串显示接口参数*/

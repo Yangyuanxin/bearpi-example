@@ -4,9 +4,9 @@
 
 LCD_Device  lcd_device =
 {
-	.lcd_init              =  LCD_Init,
-    .lcd_fill		       =  LCD_Fill,
-    .lcd_clear 		       =  LCD_Clear,
+    .lcd_init              =  LCD_Init,
+    .lcd_fill		      		 =  LCD_Fill,
+    .lcd_clear 		       	 =  LCD_Clear,
     .lcd_display_onoff     =  LCD_DisplayOnoff,
 
     .lcd_draw_rect         =  LCD_DrawRectangle,

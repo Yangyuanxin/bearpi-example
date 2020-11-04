@@ -23,7 +23,7 @@ typedef struct
     /*LCDÏÔÊ¾Í¼Ïñ*/
     void (*lcd_show_image)(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *p);
     /*LCDÏÔÊ¾ÖĞÎÄ×Ö·û´®*/
-    void (*lcd_show_chinese_str)(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t bc,uint8_t sizey,uint8_t mode);
+    void (*lcd_show_chinese_str)(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode);
     /*LCDÏÔÊ¾ASCII×Ö·û´®*/
     void (*lcd_show_ascii_str)(uint16_t x, uint16_t y, uint8_t max_width, char* str, uint16_t back_color, uint16_t font_color, uint8_t font_size);
 } LCD_Device ;

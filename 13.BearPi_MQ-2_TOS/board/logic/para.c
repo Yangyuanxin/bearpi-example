@@ -56,7 +56,7 @@ static void Load_System_Para(void)
     DEBUG("音量:%d\n", User_Memory_Para.volume);
     DEBUG("灵敏度:%d\n", User_Memory_Para.sensivity);
     DEBUG("调试标志:%d\n", User_Memory_Para.debug_flag);
-	
+
     /*检测记录流水号*/
     User_Memory_Para.detetct_log_serial_number = iniparser_getint(Config_ini, "Setting:Detect_Log_Serial_Number", -1);
 
@@ -97,13 +97,15 @@ void Load_Config_ini_File(void)
         DEBUG("cannot parse %s file\n", SETTING_PARA);
         Create_Default_InI_File();
         Config_ini = iniparser_load(SETTING_PARA);
-		if(NULL == Config_ini)
-		{
-			DEBUG("创建默认INI文件后继续加载出错\n");
+
+        if(NULL == Config_ini)
+        {
+            DEBUG("创建默认INI文件后继续加载出错\n");
             return  ;
-		}
+        }
     }
-	DEBUG("加载INI文件成功\n");
+
+    DEBUG("加载INI文件成功\n");
     /*加载系统参数*/
     Load_System_Para();
 }
@@ -117,7 +119,7 @@ void setting_debug(uint8_t status)
     User_Memory_Para.debug_flag = status ;
     iniparser_set(Config_ini, "Setting:Debug_flag", buf);
     DEBUG("设置调试:%d\r\n", iniparser_getint(Config_ini, "Setting:Debug_flag", -1));
-	User_Para_Save_Process();
+    User_Para_Save_Process();
 }
 
 /*设置音量*/
@@ -129,7 +131,7 @@ void setting_volume(uint8_t status)
     User_Memory_Para.volume = status ;
     iniparser_set(Config_ini, "Setting:Vol_flag", buf);
     DEBUG("设置音量:%d\r\n", iniparser_getint(Config_ini, "Setting:Vol_flag", -1));
-	User_Para_Save_Process();
+    User_Para_Save_Process();
 }
 
 /*设置灵敏度*/
@@ -141,7 +143,7 @@ void setting_sensivity(uint8_t status)
     User_Memory_Para.sensivity = status ;
     iniparser_set(Config_ini, "Setting:Sensivity", buf);
     DEBUG("设置灵敏度:%d\r\n", iniparser_getint(Config_ini, "Setting:Sensivity", -1));
-	User_Para_Save_Process();
+    User_Para_Save_Process();
 }
 
 
@@ -158,7 +160,7 @@ void Alarm_Threhold_Setting(void)
     iniparser_set(Config_ini, "Setting:SENSIVITY_LOW", buf1);		/*低灵敏度*/
     iniparser_set(Config_ini, "Setting:SENSIVITY_MEDIUM", buf2);	/*中灵敏度*/
     iniparser_set(Config_ini, "Setting:SENSIVITY_HIGH", buf3);		/*高灵敏度*/
-	User_Para_Save_Process();
+    User_Para_Save_Process();
 }
 
 /*记录流水号保存处理*/
@@ -169,7 +171,7 @@ void User_Detect_Log_Save_Process(void)
     sprintf(buf, "%d", User_Memory_Para.detetct_log_serial_number);
     iniparser_set(Config_ini, "Setting:Detect_Log_Serial_Number", buf);
     DEBUG("设置检测流水号:%d\r\n", iniparser_getint(Config_ini, "Setting:Detect_Log_Serial_Number", -1));
-	User_Para_Save_Process();
+    User_Para_Save_Process();
 }
 
 /*用户参数保存处理*/
@@ -190,7 +192,7 @@ void User_Para_Save_Process(void)
     iniparser_dump_ini(Config_ini, &USER_SYS_CONFIG_File);
     f_close(&USER_SYS_CONFIG_File);
     iniparser_freedict(Config_ini);
-	Load_Config_ini_File();
+    Load_Config_ini_File();
     //解锁系统调度
     tos_knl_sched_unlock();
 }

@@ -663,18 +663,18 @@ static void st7789_run_cfg_script(void)
  */
 void LCD_Init(void)
 {
-	LCD_DisplayOff();
-	/* 复位LCD */
+		LCD_DisplayOff();
+		/* 复位LCD */
     LCD_PWR(0);
     LCD_RST(0);
     HAL_Delay(100);
     LCD_RST(1);
-	/*使能SPI单线发送模式*/
+		/*使能SPI单线发送模式*/
     SPI_1LINE_TX(&hspi2);
     __HAL_SPI_ENABLE(&hspi2);
     st7789_run_cfg_script();
-	LCD_Clear(BLACK);
-	LCD_DisplayOn();
+		LCD_Clear(BLACK);
+		LCD_DisplayOn();
 }
 
 

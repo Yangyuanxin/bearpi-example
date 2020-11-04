@@ -70,7 +70,19 @@ void SystemClock_Config(void);
 int main(void)
 {
     /* USER CODE BEGIN 1 */
-	LCD_Driver_Model	 lcd_model ;
+    LCD_Driver_Model	 lcd_model ;
+		LCD_Ascii_Show_Para ascii_para[] =
+    {
+        {80, 100, 240-80, "RED", BLACK, RED, 32},
+        {80, 100, 240-80, "GREEN", BLACK, GREEN, 32},
+        {80, 100, 240-80, "BLUE", BLACK, BLUE, 32},
+    };
+		LCD_Fill_Para fill_para[] = 
+		{
+			{ascii_para[0].x,ascii_para[0].max_width,ascii_para[0].y,ascii_para[0].y+32},
+			{ascii_para[1].x,ascii_para[1].max_width,ascii_para[1].y,ascii_para[1].y+32},
+			{ascii_para[2].x,ascii_para[2].max_width,ascii_para[2].y,ascii_para[2].y+32},
+		} ;
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/
@@ -97,16 +109,10 @@ int main(void)
     /* USER CODE BEGIN 2 */
     /*串口初始化后加这个延时，防止后面的printf打印乱码*/
     HAL_Delay(200);
-	/*注册驱动模型*/
-	Register_Driver_Model(&lcd_model);
-	lcd_model.lcd_driver->lcd_init();
-	LCD_Ascii_Show_Para ascii_para[] = 
-	{
-		{5,10,235,"LCD Frame",BLACK,WHITE,32},
-		{5,10,235,"LCD Driver",BLACK,WHITE,32},
-		{5,10,235,"LCD Device",BLACK,WHITE,32},
-	};
-	lcd_model.lcd_driver->lcd_show_ascii_str(ascii_para[0]);
+    /*注册驱动模型*/
+    Register_Driver_Model(&lcd_model);
+    lcd_model.lcd_driver->lcd_init();
+    lcd_model.lcd_driver->lcd_show_ascii_str(ascii_para[0]);
     /* USER CODE END 2 */
 
     /* Infinite loop */
@@ -116,13 +122,12 @@ int main(void)
         /* USER CODE END WHILE */
 
         /* USER CODE BEGIN 3 */
-		for(int i = 0 ; i < 3 ; i++)
-		{
-			LCD_Fill_Para fill_para = {5,235,10,42} ;
-			lcd_model.lcd_driver->lcd_fill(fill_para);
-			lcd_model.lcd_driver->lcd_show_ascii_str(ascii_para[i]);
-			HAL_Delay(500);
-		}
+        for(int i = 0 ; i < 3 ; i++)
+        {
+            lcd_model.lcd_driver->lcd_fill(fill_para[i]);
+            lcd_model.lcd_driver->lcd_show_ascii_str(ascii_para[i]);
+            HAL_Delay(100);
+        }
     }
 
     /* USER CODE END 3 */
