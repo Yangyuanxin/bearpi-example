@@ -124,9 +124,13 @@ int main(void)
         for(i = 0 ; i <= DATA_SIZE - 2 ; i++)
             plot_handler.rel_data_data[i] = plot_handler.rel_data_data[i + 1];
         plot_handler.rel_data_data[DATA_SIZE - 1] = smoke_value ;
+				/*先将背景刷黑*/
         LCD_Plot_Display(plot_handler.old_plot_data, DATA_SIZE, BLACK);
+				/*传感器数据处理*/
 				LCD_Plot_Remap(plot_handler.rel_data_data,plot_handler.new_plot_data, DATA_SIZE);
+				/*传感器数据曲线显示*/
 				LCD_Plot_Display(plot_handler.new_plot_data, DATA_SIZE, GREEN);
+				/*将处理完成的备份数据区的数据拷贝到旧的备份数据区*/
         memcpy(plot_handler.old_plot_data, plot_handler.new_plot_data, sizeof(plot_handler.new_plot_data));
         HAL_Delay(10);
     }

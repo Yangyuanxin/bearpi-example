@@ -1,0 +1,6 @@
+Dependencies for Project 'dart_lib', Target 'Target 1': (DO NOT MODIFY !)
+CompilerVersion: 5060750::V5.06 update 6 (build 750)::ARMCC
+F (.\dart\dart_sensor.c)(0x5FBBC3CE)(--c99 --gnu -c --cpu Cortex-M0+ -g -O0 --apcs=interwork --split_sections -I .\dart-I.\RTE\_Target_1-IC:\Users\Administrator\AppData\Local\Arm\Packs\Keil\STM32G0xx_DFP\1.2.0\Drivers\CMSIS\Device\ST\STM32G0xx\Include-IC:\Keil_v5\UV5\ARM\CMSIS\Include-D__UVISION_VERSION="529" -DSTM32G070xx-o .\objects\dart_sensor.o --omf_browse .\objects\dart_sensor.crf --depend .\objects\dart_sensor.d)
+I (dart\dart_sensor.h)(0x5FBBC3CE)
+I (C:\Keil_v5\UV5\ARM\ARMCC\include\stdint.h)(0x5D9AD218)
+I (C:\Keil_v5\UV5\ARM\ARMCC\include\string.h)(0x5D9AD218)
