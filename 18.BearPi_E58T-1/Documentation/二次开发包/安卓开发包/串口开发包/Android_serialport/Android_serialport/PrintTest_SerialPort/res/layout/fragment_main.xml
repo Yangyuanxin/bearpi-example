@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+        <LinearLayout
+            android:id="@+id/linearLayoutUSBDevices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+        <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/linearLayoutUSBDevices"
+            android:id="@+id/search_print_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_printer"
+            />
+        
+        <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/search_print_bt"
+            android:id="@+id/lable_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置标签模式"
+            />
+         <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/lable_bt"
+            android:id="@+id/printlabe_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="标签打印"
+            />
+           <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/printlabe_bt"
+            android:id="@+id/ptprint_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="普通打印"
+            />
+             <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/ptprint_bt"
+            android:id="@+id/xiaozhun_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="标签校准"
+            />
+         <Button 
+            android:layout_marginTop="6dp"
+            android:layout_below="@+id/xiaozhun_bt"
+            android:id="@+id/receipt_bt"
+             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="设置小票模式"
+            />
+         
+        
+</RelativeLayout>

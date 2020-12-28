@@ -1,0 +1,417 @@
+//*****007. 打印;表*****
+/*
+uchar A[70]={  //检验项目: CRP 
+              0x1B,0x40,//初始化命令
+              0x1c,0x49,0x02,
+              0x1b,0x38, 0x1b,0x57,0x02,0x20,0x20,0x20,0x20,0x50,0x52,0x43,0x3A,0xC4,0xBF,0xCF,0xEE,0xD1,0xE9,0xBC,0xEC,
+              0x0A,//换行
+              0x1B,0x40, 0x1c,0x49,0x02, 
+              0x1b,0x57,0x01,0x1b,0x56,0x02,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x4C,0x2F,0x67,0x6D,0x30,0x31,0x7E,0x30,0x3A,
+              0x1b,0x57,0x02,0xCE,0xA7, 0xB7,0xB6,0xBF,0xBC,0xB2,0xCE,//参考范围：**~**mg/L
+              };
+uchar A1[40]={ //****化验单****
+               0x1B,0x40,//初始化命令
+               0x1b,0x57,0x02,0x2A,0x2A,0x2A,0x2A,0x2A,0x1b,0x38,0x1c,0x49,0x02,0xB5,0xA5,0xD1,0xE9,0xBB,0xAF,0x2A,0x2A,0x2A,0x2A,0x2A,
+               };
+uchar B0[40]={//***20
+               0x1B,0x40,0x1b,0x57,0x01,0x1b,0x56,0x02,0x1c,0x49,0x02,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,
+               };*/
+uchar A[]={  //检验项目: CRP 
+              0x1B,0x40,//初始化命令
+              0x1c,0x49,0x02,
+              0x1b,0x38, 0x1b,0x57,0x02,0x20,0x02,0x20,0x43,0x2d,0xB7,0xB4,0Xd3,0xA6,0xb5,0xb0,0xb0,0xd7,0xbc,0xec,0xb2,0xe2,0xb1,0xa8,0xb8,0xe6,0xb5,0xa5,  //C-反应蛋白检测报告单
+              0x0A,//换行
+	      0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x20,0x2a,0x0a,  //*********************************
+              0x20,0x20,0xd1,0xf9,0xb1,0xbe,0x3a, 0x5f,0x20,0x5f,0x20,0x5f,0x20,0x5f,0x20,0x5f,0x0a,			  //样本：__ _ __　＿
+	      0x20,0x20,0xd0,0xd5,0xc3,0xfb,0x3a, 0x5f,0x20,0x5f,0x20,0x5f,0x20,0x5f,0x20,0x5f,0x20,0x5f,0x0a,
+              0x20, 0x20,0xcf,0xee,0xc4,0xbf,0x20,0x20,0x20,0x20,  //项目
+			   0xbd,0xe1,0xb9,0xfb, 0x20,0x20,0x20,0x20,0x20,    //   结果
+			   0xb2,0xce,0xbf,0xbc,0xd6,0xb5,0x0a,  //参考值
+                       0x20,0x20,0x48,0x53,0x2d,0x43,0x52,0x50,0x20,0x20,
+                        0x3e,0x35,0x2e,0x30,0x6d,0x67,0x2f,0x4c,0x20,0x20,
+                       0x3c,0x33,0x2e,0x30};
+                 
+              
+uchar B0[40]={//***20
+               //0x1B,0x40,0x1b,0x57,0x20,0x20,0x20,0x20,0x20,0x20,0x20,0x20,  //0x01,0x1b,0x56,0x1c,0x49,0x00,
+             //  0x1B,0x40,0x1b,0x57,0x01,0x1b,0x56,0x02,0x1c,0x49,0x02,
+             // 0x1B,0x40,
+             // 0x1b,0x57,0x02,
+               0
+               };
+uchar B[]={ //****化验单****,
+               //0x1B,0x40,//初始化命令
+             //  0x1b,0x57,0x02,
+  0
+              
+};  
+
+
+//***********************************************************
+// 功能：串口通信初始化
+// 入口：无
+// 出口：无      
+//***********************************************************
+void init_usart(void)
+{
+   UCTL0 |=SWRST;
+    P2SEL |= BIT4;                            // P2.4= USART0 TXD
+    ME1 |= UTXE0;                             // Enable USART0 TXD/RXD
+    UCTL0 |= CHAR;                            // 8-bit character
+    UTCTL0 |= SSEL0;                          // UCLK = ACLK
+    UBR00 = 0x03;                             // 32k/9600 - 3.41
+    UBR10 = 0x00;                             //
+    UMCTL0= 0x4A;                             // Modulation
+    UCTL0 &= ~SWRST;                          // Initialize USART state machine
+}
+/*******************************************
+功    能：向打印机机发送字符串
+参    数：ptr--指向发送字符串的指针
+返回值  ：无
+********************************************/
+void putstring(uchar *ptr)
+{
+      while(*ptr != '\0')
+      {
+            while (!(IFG1 & UTXIFG0));                // TX缓存空闲？
+            TXBUF0 = *ptr++;                          // 发送数据
+      }
+      while (!(IFG1 & UTXIFG0));
+      TXBUF0 = '\n';
+}
+/*******************************************
+函数名称：printcrp
+功    能：实时打印CRP值
+参    数：CRP值
+返回值  ：无
+********************************************/
+void printcrp(void)
+{
+ // while (!(IFG1 & UTXIFG0));
+ //  TXBUF0 = 0x0a; 
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x40 ;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1C; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x49;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x00;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x20 ;
+  /*   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20;  
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+     while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x57;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x01;
+   while (!(IFG1& UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x56;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x02;    
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2D; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2D;
+*/
+           
+     
+
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x57;
+
+
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x43; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x52; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x50; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20;
+ while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+
+
+
+
+  while (!(IFG1 & UTXIFG0));
+   if((Test_Voltage/1000)%10!=0)
+    {
+      TXBUF0 = 0x30 + (Test_Voltage/1000);
+    }  
+    while (!(IFG1 & UTXIFG0));
+   if((Test_Voltage/100)%10!=0)
+    {
+          TXBUF0 = 0x30 + (Test_Voltage/100)%10;   
+    }
+
+    while (!(IFG1 & UTXIFG0)); 
+    TXBUF0 = 0x30 + (Test_Voltage/10)%10;  
+    while (!(IFG1 & UTXIFG0));                          //小数点
+    TXBUF0 = 0x2E;
+    while (!(IFG1 & UTXIFG0));   
+   TXBUF0 = 0x30 + Test_Voltage%10;  
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x6D;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x67; 
+      while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2F;  
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x4C;
+      while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x3C;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x31;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x30;
+     while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2E;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x30;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x0A; 
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x0A; 
+      while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x0A; 
+  TXBUF0 = '\n';  
+  }
+  /*
+void printcrp(void)
+{
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x40 ;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1C; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x49;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x02;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x20 ;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20;  
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x57;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x01;
+   while (!(IFG1& UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x56;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x02;    
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2D; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2D;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x4C;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2F;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x67; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x6D;
+   while (!(IFG1 & UTXIFG0));              
+     TXBUF0 = 0x30 + Test_Voltage%10;
+   while (!(IFG1 & UTXIFG0));                             //小数点
+     TXBUF0 = 0x2E;
+   while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x30 + (Test_Voltage/10)%10;
+  while (!(IFG1 & UTXIFG0));
+    if((Test_Voltage/100)%10!=0)
+    {
+      TXBUF0 = 0x30 + (Test_Voltage/100)%10;
+    }
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x3A;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x57;
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x02;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xB9; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xFB;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xBD;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xE1; 
+    while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xD1; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xE9; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xBC; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xEC; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x0A;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x0A; 
+   while (!(IFG1 & UTXIFG0));
+  TXBUF0 = '\n';  
+  }
+/*******************************************
+函数名称：printtime
+功    能：实时打印检测时间
+参    数：时间
+返回值  ：无
+********************************************/
+/*void printtime(void)
+{
+  uchar B1[50];
+  int n;
+  for(n=0;n<25;n++)
+  {
+    B1[n]=B0[n];
+  }
+  B1[40]=0x32;
+  B1[39]=0x30;
+  B1[38]=0x30+year/10;
+  B1[37]=0x30+year%10;
+  B1[36]=0x2D;
+  B1[35]=0x30+month/10;
+  B1[34]=0x30+month%10;
+  B1[33]=0x2D;
+  B1[32]=0x30+day/10;
+  B1[31]=0x30+day%10;
+  B1[30]=0x20;
+  B1[29]=0x30+hour/10;
+  B1[28]=0x30+hour%10;
+  B1[27]=0x3A;
+  B1[26]=0x30+minute/10;
+  B1[25]=0x30+minute%10;
+  putstring(B1);
+  }*/
+  void printtime(void)
+{ 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1B; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x40 ;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x1C; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x49;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x00;
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+     while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xca; 
+  while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0xb1 ;
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xbc; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0xe4;  
+  while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x3a; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x20; 
+    
+   while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x32;  
+    while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x30;  	
+    while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x30+year/10;  
+    while (!(IFG1 &UTXIFG0)); 
+    TXBUF0 = 0x30+year%10;  
+   while (!(IFG1 & UTXIFG0));                         //小数点
+    TXBUF0 = 0x2d;
+    while (!(IFG1 & UTXIFG0));   
+   TXBUF0 = 0x30+month/10; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x30+month%10; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x2d; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x30+day/10;  
+    while (!(IFG1 & UTXIFG0)); 
+    TXBUF0 = 0x30+day%10;  
+    while (!(IFG1 & UTXIFG0));                          //小数点
+    TXBUF0 = 0x20;
+    while (!(IFG1 & UTXIFG0));   
+   TXBUF0 = 0x30+hour/10; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x30+hour%10; 
+   while (!(IFG1 & UTXIFG0));
+   TXBUF0 = 0x3A; 
+    while (!(IFG1 & UTXIFG0));
+    TXBUF0 = 0x30+minute/10;  
+    while (!(IFG1 & UTXIFG0)); 
+    TXBUF0 = 0x30+minute%10;  
+    while (!(IFG1 & UTXIFG0));
+        TXBUF0 = 0X0A;  
+      while (!(IFG1 & UTXIFG0));
+        TXBUF0 = 0X0A;    
+       while (!(IFG1 & UTXIFG0));
+        TXBUF0 = 0X0A;  
+      while (!(IFG1 & UTXIFG0));
+        TXBUF0 = 0X0A;    
+  TXBUF0 = '\n';  
+  
+  }
+/*******************************************
+函数名称：print
+功    能：打印化验单
+参    数：CRP_value，year,month,day,hour,min
+返回值  ：无
+********************************************/
+void print(void)
+{
+  /* putstring(A1);                                     //打印化验单
+   printtime();                                       //打印时间
+   putstring(A);                                      //检验项目，参考范围
+   printcrp();                                        //打印检验结果*/
+   
+   putstring(A);                                     //打印化验单
+  
+// putstring(B);                                      //检验项目，参考范围
+   printcrp();                                        //打印检验结果
+   printtime();                                       //打印时间 
+}

@@ -1,0 +1,9 @@
+﻿1 针对嵌入式Linux系统，或者不想使用dll的客户，我们提供源代码
+2 printerlibs_source里面的.h头文件即是源代码，这个是跨平台源码，已经在WIN32,WIN64,LINUX32,LINUX64,MAC,以及其他嵌入式系统上面测试通过并打印OK的。
+3 printerlibs_caysnpos_qttest是QT工程，是源代码使用示例。你可以在电脑端安装QT，并运行工程测试。强烈建议运行此测试程序，此测试程序QT工程是跨平台的。
+4 如果不想安装QT，请打开widget.cpp文件，里面有对应的按钮事件，每个按钮事件都演示了一个功能。比如说列举端口，打开端口，查询打印机状态，打印文本、条码、二维码、图片等。
+
+支持XP系统的QT及QTCreator
+QT下载地址：http://download.qt.io/official_releases/qt/4.8/4.8.7/
+QTCreator下载地址：http://download.qt.io/official_releases/qtcreator/2.5/2.5.2/
+建议选用最新版本下载，直接百度搜索即可。
