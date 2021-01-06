@@ -6,14 +6,6 @@ __weak void send_byte(char byte)
     UNUSED(byte);
 }
 
-
-/*初始化打印机*/
-void Init_Print(void)
-{
-	Send_Byte(0x1B);
-	Send_Byte(0x40);
-}
-
 /*发送文本到打印机模块*/
 void SendStringToPrintModule(char *str)
 {

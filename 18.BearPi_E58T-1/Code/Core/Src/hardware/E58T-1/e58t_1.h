@@ -7,8 +7,6 @@
 
 
 
-/*初始化打印机*/
-void Init_Print(void);
 /*发送文本到打印机模块*/
 void SendStringToPrintModule(char *str);
 /*设置文本对齐方式*/

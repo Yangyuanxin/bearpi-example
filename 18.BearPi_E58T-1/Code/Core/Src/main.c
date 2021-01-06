@@ -58,12 +58,14 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+//提供发送字节的函数
 void send_byte(uint8_t byte)
 {
 	HAL_UART_Transmit(&huart3, &byte, 1, 1000);	
   while(__HAL_UART_GET_FLAG(&huart3, UART_FLAG_TXE) != SET);
 }
 #define NR(x) (sizeof(x)/sizeof(x[0]))
+//要打印的信息
 char *BearPi_Info[] = 
 {
 	"全新一代物联网开发板\r\n",
@@ -136,7 +138,6 @@ int main(void)
 	LCD_ShowChinese(0,60,(uint8_t *)"中景园电子",YELLOW,BLACK,32,1); //32*32
 	LCD_ShowChinese(0,100,(uint8_t *)"中景园电子",GREEN,BLACK,48,1); //48*48
 	LCD_ShowChinese(15,160,(uint8_t *)"中景园",BLUE,BLACK,64,1); //64*64
-	Init_Print();
 	Print_BearPi_Info();
   /* USER CODE END 2 */
 
