@@ -615,13 +615,13 @@ ARM Macro Assembler    Page 10
               00000400 
               00001000 
               00000000 
-Command Line: --xref --diag_suppress=9931 --cpu=Cortex-M4.fp.sp --apcs=interwor
-k --depend=light_sensor_i2c\startup_stm32l431xx.d -olight_sensor_i2c\startup_st
-m32l431xx.o -I.\RTE\_LIGHT_SENSOR_I2C -IC:\Users\Administrator\AppData\Local\Ar
-m\Packs\ARM\CMSIS\5.6.0\CMSIS\Core\Include -IC:\Users\Administrator\AppData\Loc
-al\Arm\Packs\Keil\STM32L4xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L4xx\Include
- --predefine="__UVISION_VERSION SETA 529" --predefine="_RTE_ SETA 1" --predefin
-e="STM32L431xx SETA 1" --list=startup_stm32l431xx.lst startup_stm32l431xx.s
+Command Line: --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=interwork -
+-depend=light_sensor_i2c\startup_stm32l431xx.d -olight_sensor_i2c\startup_stm32
+l431xx.o -I.\RTE\_LIGHT_SENSOR_I2C -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.4.0\CMSIS\
+Core\Include -IC:\Keil_v5\ARM\PACK\Keil\STM32L4xx_DFP\2.1.0\Drivers\CMSIS\Devic
+e\ST\STM32L4xx\Include --predefine="__UVISION_VERSION SETA 526" --predefine="_R
+TE_ SETA 1" --predefine="STM32L431xx SETA 1" --list=startup_stm32l431xx.lst sta
+rtup_stm32l431xx.s
 
 
 
