@@ -83,6 +83,8 @@
 
 - 20.小熊派上QSPI与SD卡文件系统同时挂载进行读写测试
 
+- 21.小熊派在SD卡fatfs上将图片资源复制到QSPI的fatfs上，调用api显示QSPI fatfs上的图片
+
 #### 参与贡献
 
 1.  Fork 本仓库
