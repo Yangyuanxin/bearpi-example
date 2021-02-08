@@ -85,6 +85,8 @@
 
 - 21.小熊派在SD卡fatfs上将图片资源复制到QSPI的fatfs上，调用api显示QSPI fatfs上的图片
 
+- 22.小熊派从SD卡拷贝UI资源到QSPI_FLASH上，并通过STemWin进行展示
+
 #### 参与贡献
 
 1.  Fork 本仓库

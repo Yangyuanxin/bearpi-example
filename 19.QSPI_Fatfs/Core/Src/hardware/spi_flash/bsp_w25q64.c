@@ -50,64 +50,6 @@ extern QSPI_HandleTypeDef hqspi;
 
 extern QSPI_HandleTypeDef hqspi;
 
-/* This function is called by inner-HAL lib */
-static void HAL_QSPI_MspInit(QSPI_HandleTypeDef* qspiHandle)
-{
-
-  GPIO_InitTypeDef GPIO_InitStruct;
-  if(qspiHandle->Instance==QUADSPI)
-  {
-  /* USER CODE BEGIN QUADSPI_MspInit 0 */
-
-  /* USER CODE END QUADSPI_MspInit 0 */
-    /* QUADSPI clock enable */
-    __HAL_RCC_QSPI_CLK_ENABLE();
-  
-    /**QUADSPI GPIO Configuration    
-    PB0     ------> QUADSPI_BK1_IO1
-    PB1     ------> QUADSPI_BK1_IO0
-    PB10     ------> QUADSPI_CLK
-    PB11     ------> QUADSPI_BK1_NCS 
-    */
-    GPIO_InitStruct.Pin = GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_10|GPIO_PIN_11;
-    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-    GPIO_InitStruct.Pull = GPIO_NOPULL;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-    GPIO_InitStruct.Alternate = GPIO_AF10_QUADSPI;
-    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* USER CODE BEGIN QUADSPI_MspInit 1 */
-
-  /* USER CODE END QUADSPI_MspInit 1 */
-  }
-}
-
-/* This function is called by inner-HAL lib */
-static void HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* qspiHandle)
-{
-
-  if(qspiHandle->Instance==QUADSPI)
-  {
-  /* USER CODE BEGIN QUADSPI_MspDeInit 0 */
-
-  /* USER CODE END QUADSPI_MspDeInit 0 */
-    /* Peripheral clock disable */
-    __HAL_RCC_QSPI_CLK_DISABLE();
-  
-    /**QUADSPI GPIO Configuration    
-    PB0     ------> QUADSPI_BK1_IO1
-    PB1     ------> QUADSPI_BK1_IO0
-    PB10     ------> QUADSPI_CLK
-    PB11     ------> QUADSPI_BK1_NCS 
-    */
-    HAL_GPIO_DeInit(GPIOB, GPIO_PIN_0|GPIO_PIN_1|GPIO_PIN_10|GPIO_PIN_11);
-
-  /* USER CODE BEGIN QUADSPI_MspDeInit 1 */
-
-  /* USER CODE END QUADSPI_MspDeInit 1 */
-  }
-}
-
 
 /**
  * @brief	QSPI∑¢ÀÕ√¸¡Ó
@@ -122,6 +64,7 @@ static void HAL_QSPI_MspDeInit(QSPI_HandleTypeDef* qspiHandle)
  *
  * @return  void
  */
+//QSPI_Send_CMD(QSPI_FLASH_WriteEnable, 0, 0, QSPI_INSTRUCTION_1_LINE, QSPI_ADDRESS_NONE, QSPI_ADDRESS_8_BITS, QSPI_DATA_NONE);
 uint32_t QSPI_Send_CMD(uint32_t instruction, uint32_t address, uint32_t dummyCycles, uint32_t instructionMode, uint32_t addressMode, uint32_t addressSize, uint32_t dataMode)
 {
     QSPI_CommandTypeDef s_command;

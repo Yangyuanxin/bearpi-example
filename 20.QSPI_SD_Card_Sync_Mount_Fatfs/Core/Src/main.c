@@ -69,7 +69,7 @@ void SystemClock_Config(void);
 int main(void)
 {
     /* USER CODE BEGIN 1 */
-    
+
     /* USER CODE END 1 */
 
     /* MCU Configuration--------------------------------------------------------*/
@@ -96,12 +96,12 @@ int main(void)
     MX_FATFS_Init();
     MX_SDMMC1_SD_Init();
     /* USER CODE BEGIN 2 */
-		Mount_SD_Fatfs();
+    Mount_SD_Fatfs();
     Mount_QSPI_FLASH_Fatfs();
-		test_get_qspi_cap();
-		test_get_sd_card_cap();
-		test_sd_card_fatfs();
-		test_spi_flash_fatfs();
+    test_get_qspi_cap();
+    test_get_sd_card_cap();
+    test_sd_card_fatfs();
+    test_spi_flash_fatfs();
     /* USER CODE END 2 */
 
     /* Infinite loop */
