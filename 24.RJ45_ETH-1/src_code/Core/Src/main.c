@@ -59,10 +59,12 @@ void SystemClock_Config(void);
 __IO uint16_t Count_Timer = 0;
 __IO uint16_t Count_LED_Timer = 0;
 
+#define DEVICE_ID ""
+#define API_KEY   ""
 
 char *post_http_data = \
-    "POST /devices/604618155/datapoints?type=3 HTTP/1.1\r\n"	\
-    "api-key:NGSRfMY43gLebqieuaX4UfPgoac=\r\n"					\
+    "POST /devices/"DEVICE_ID"/datapoints?type=3 HTTP/1.1\r\n"	\
+    "api-key:"API_KEY"\r\n"					\
     "Host:api.heclouds.com\r\n"									\
     "Content-Length:11\r\n\r\n"
 		"{\"ppm\":100}";

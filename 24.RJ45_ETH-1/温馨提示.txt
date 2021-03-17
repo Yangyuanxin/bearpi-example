@@ -1,1 +1,11 @@
 以上是我自己搭建的服务器往后台发送的HTTP JSON数据包，你可以改成你自己要传的协议数据包。
+
+#define DEVICE_ID ""
+#define API_KEY   ""
+
+char *post_http_data = \
+    "POST /devices/"DEVICE_ID"/datapoints?type=3 HTTP/1.1\r\n"	\
+    "api-key:"API_KEY"\r\n"					\
+    "Host:api.heclouds.com\r\n"									\
+    "Content-Length:11\r\n\r\n"
+		"{\"ppm\":100}";
