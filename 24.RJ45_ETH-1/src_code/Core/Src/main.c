@@ -56,16 +56,16 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define SERVER_IP		""
-#define SERVER_PORT "" 
 __IO uint16_t Count_Timer = 0;
 __IO uint16_t Count_LED_Timer = 0;
-char *post_http_data =
-    "POST /api/explosive/messages HTTP/1.1\r\n"
-    "Host: 120.78.126.134:9002\r\n"
-    "Content-Type: application/json\r\n"
-    "content-length: 68\r\n\r\n"
-    "{\"devicetype\":\"explosive\",\"time\":\"2020-11-17 17:02\",\"type\":\"danger\"}";
+
+
+char *post_http_data = \
+    "POST /devices/604618155/datapoints?type=3 HTTP/1.1\r\n"	\
+    "api-key:NGSRfMY43gLebqieuaX4UfPgoac=\r\n"					\
+    "Host:api.heclouds.com\r\n"									\
+    "Content-Length:11\r\n\r\n"
+		"{\"ppm\":100}";
 /* USER CODE END 0 */
 
 /**
@@ -184,15 +184,11 @@ void SystemClock_Config(void)
     /** Initializes the RCC Oscillators according to the specified parameters
     * in the RCC_OscInitTypeDef structure.
     */
-    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-    RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-    RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-    RCC_OscInitStruct.PLL.PLLM = 1;
-    RCC_OscInitStruct.PLL.PLLN = 20;
-    RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV7;
-    RCC_OscInitStruct.PLL.PLLQ = RCC_PLLQ_DIV2;
-    RCC_OscInitStruct.PLL.PLLR = RCC_PLLR_DIV2;
+    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_MSI;
+    RCC_OscInitStruct.MSIState = RCC_MSI_ON;
+    RCC_OscInitStruct.MSICalibrationValue = 0;
+    RCC_OscInitStruct.MSIClockRange = RCC_MSIRANGE_6;
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
 
     if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
     {
@@ -203,12 +199,12 @@ void SystemClock_Config(void)
     */
     RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
                                   | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
-    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
+    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_MSI;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
     RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
     RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
-    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_4) != HAL_OK)
+    if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_0) != HAL_OK)
     {
         Error_Handler();
     }

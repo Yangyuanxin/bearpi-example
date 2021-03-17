@@ -21,21 +21,21 @@
 
 typedef struct
 {
-    __IO uint8_t  BufferReady ;
-    uint8_t  RJ45TxBuffer[RJ45_TXBUFFER_SIZE];
+		__IO uint8_t  BufferReady ;
+		uint8_t  RJ45TxBuffer[RJ45_TXBUFFER_SIZE];
     uint8_t  RJ45RxBuffer[RJ45_RXBUFFER_SIZE];
 } RJ45HandleTypeDef;
 extern RJ45HandleTypeDef RJ45r_Handler ;
 
 typedef struct _DEVICEPORT_CONFIG
 {
-    uint8_t  dataMode;		/* 数据模式：0:命令模式 1:透传模式*/
-    uint8_t  bNetMode;    /* 网络工作模式: 0: TCP SERVER;1: TCP CLENT; 2: UDP SERVER 3：UDP CLIENT; */
-    uint8_t  gDesIP[4];   /* 目的IP地址 */
-    uint16_t gNetPort;    /* 目的端口号 */
-    uint8_t  bMacAddr[4];	/* 芯片MAC地址*/
-    __IO uint8_t tcp_status ;	/*服务器连接状态*/
-} DevicePortConfigS;
+	uint8_t  dataMode;		/* 数据模式：0:命令模式 1:透传模式*/
+	uint8_t  bNetMode;    /* 网络工作模式: 0: TCP SERVER;1: TCP CLENT; 2: UDP SERVER 3：UDP CLIENT; */
+  uint8_t  gDesIP[4];   /* 目的IP地址 */
+  uint16_t gNetPort;    /* 目的端口号 */
+	uint8_t  bMacAddr[4];	/* 芯片MAC地址*/
+	__IO uint8_t tcp_status ;	/*服务器连接状态*/
+}DevicePortConfigS;
 extern DevicePortConfigS Deice_Para_Handledef ;
 
 
